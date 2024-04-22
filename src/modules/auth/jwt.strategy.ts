@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
@@ -28,16 +32,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    const user = await this.userService.findOne({
-      // FIXME: issue with type casts
-      id: args.userId as never,
-      role: args.role,
-    });
+    // const user = await this.userService.findOne({
+    //   // FIXME: issue with type casts
+    //   id: args.userId as never,
+    //   role: args.role,
+    // });
 
-    if (!user) {
-      throw new UnauthorizedException();
-    }
+    // if (!user) {
+    //   throw new UnauthorizedException();
+    // }
 
-    return user;
+    // return user;
+
+    throw new BadRequestException('Invalid App Version');
   }
 }

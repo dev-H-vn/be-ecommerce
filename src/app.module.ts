@@ -2,10 +2,10 @@ import './boilerplate.polyfill';
 
 import path from 'node:path';
 
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { TypeOrmModule } from '@nestjs/typeorm';
+// import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClsModule } from 'nestjs-cls';
 import {
   AcceptLanguageResolver,
@@ -13,21 +13,28 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
-import { DataSource } from 'typeorm';
-import { addTransactionalDataSource } from 'typeorm-transactional';
+// import { DataSource } from 'typeorm';
+// import { addTransactionalDataSource } from 'typeorm-transactional';
 
-import { AuthModule } from './modules/auth/auth.module';
+// import { AuthModule } from './modules/auth/auth.module';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
-import { PostModule } from './modules/post/post.module';
+// import { PostModule } from './modules/post/post.module';
 import { UserModule } from './modules/user/user.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
+import { VersionMiddleware } from 'middlewares/version.middleware';
+import { APP_GUARD } from '@nestjs/core';
+import { CustomThrottlerGuard } from 'guards/customThrottler.guard';
+import { UserService } from 'modules/user/user.service';
+import { AuthModule } from 'modules/auth/auth.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { addTransactionalDataSource } from 'typeorm-transactional';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
     AuthModule,
     UserModule,
-    PostModule,
     ClsModule.forRoot({
       global: true,
       middleware: {
@@ -60,24 +67,18 @@ import { SharedModule } from './shared/shared.module';
         );
       },
     }),
-    I18nModule.forRootAsync({
-      useFactory: (configService: ApiConfigService) => ({
-        fallbackLanguage: configService.fallbackLanguage,
-        loaderOptions: {
-          path: path.join(__dirname, '/i18n/'),
-          watch: configService.isDevelopment,
-        },
-        resolvers: [
-          { use: QueryResolver, options: ['lang'] },
-          AcceptLanguageResolver,
-          new HeaderResolver(['x-lang']),
-        ],
-      }),
-      imports: [SharedModule],
-      inject: [ApiConfigService],
-    }),
     HealthCheckerModule,
   ],
-  providers: [],
+
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(VersionMiddleware).forRoutes('users');
+  }
+}

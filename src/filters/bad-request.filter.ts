@@ -3,57 +3,31 @@ import {
   Catch,
   type ExceptionFilter,
   UnprocessableEntityException,
+  HttpException,
+  Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { type ValidationError } from 'class-validator';
 import { type Response } from 'express';
 import _ from 'lodash';
 
-@Catch(UnprocessableEntityException)
-export class HttpExceptionFilter
-  implements ExceptionFilter<UnprocessableEntityException>
-{
+@Catch(HttpException)
+export class HttpExceptionFilter implements ExceptionFilter {
+  logger = new Logger(HttpExceptionFilter.name);
+
   constructor(public reflector: Reflector) {}
 
   catch(exception: UnprocessableEntityException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
     const statusCode = exception.getStatus();
     const r = exception.getResponse() as { message: ValidationError[] };
 
-    const validationErrors = r.message;
-    this.validationFilter(validationErrors);
+    this.logger.debug('===TRIGGER GLOBAL FILTER===');
 
-    response.status(statusCode).json(r);
-  }
-
-  private validationFilter(validationErrors: ValidationError[]): void {
-    for (const validationError of validationErrors) {
-      const children = validationError.children;
-
-      if (children && !_.isEmpty(children)) {
-        this.validationFilter(children);
-
-        return;
-      }
-
-      delete validationError.children;
-
-      const constraints = validationError.constraints;
-
-      if (!constraints) {
-        return;
-      }
-
-      for (const [constraintKey, constraint] of Object.entries(constraints)) {
-        // convert default messages
-        if (!constraint) {
-          // convert error message to error.fields.{key} syntax for i18n translation
-          constraints[constraintKey] = `error.fields.${_.snakeCase(
-            constraintKey,
-          )}`;
-        }
-      }
-    }
+    response
+      .status(statusCode)
+      .json({ ...r, timestamp: new Date().toISOString(), path: request.url });
   }
 }

@@ -6,18 +6,9 @@ import {
 } from '../../../decorators';
 
 export class UserRegisterDto {
-  @StringField()
-  readonly firstName!: string;
-
-  @StringField()
-  readonly lastName!: string;
-
   @EmailField()
-  readonly email!: string;
+  readonly userName!: string;
 
   @PasswordField({ minLength: 6 })
   readonly password!: string;
-
-  @PhoneFieldOptional()
-  phone?: string;
 }

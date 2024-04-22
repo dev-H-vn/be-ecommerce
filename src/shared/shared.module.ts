@@ -12,7 +12,6 @@ const providers: Provider[] = [
   ValidatorService,
   AwsS3Service,
   GeneratorService,
-  TranslationService,
 ];
 
 @Global()

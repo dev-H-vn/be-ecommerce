@@ -1,6 +1,7 @@
 import {
   ClassSerializerInterceptor,
   HttpStatus,
+  Logger,
   UnprocessableEntityException,
   ValidationPipe,
 } from '@nestjs/common';
@@ -21,8 +22,9 @@ import { QueryFailedFilter } from './filters/query-failed.filter';
 import { TranslationInterceptor } from './interceptors/translation-interceptor.service';
 import { setupSwagger } from './setup-swagger';
 import { ApiConfigService } from './shared/services/api-config.service';
-import { TranslationService } from './shared/services/translation.service';
 import { SharedModule } from './shared/shared.module';
+import { LoggingInterceptor } from 'interceptors/logging.interceptor';
+import { CustomValidationPipe } from 'decorators';
 
 export async function bootstrap(): Promise<NestExpressApplication> {
   initializeTransactionalContext();
@@ -37,9 +39,9 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   app.use(compression());
   app.use(morgan('combined'));
   app.enableVersioning();
+  const logger = new Logger(bootstrap.name);
 
   const reflector = app.get(Reflector);
-
   app.useGlobalFilters(
     new HttpExceptionFilter(reflector),
     new QueryFailedFilter(reflector),
@@ -47,9 +49,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(reflector),
-    new TranslationInterceptor(
-      app.select(SharedModule).get(TranslationService),
-    ),
+    new LoggingInterceptor(),
   );
 
   app.useGlobalPipes(
@@ -60,6 +60,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
       dismissDefaultMessages: true,
       exceptionFactory: (errors) => new UnprocessableEntityException(errors),
     }),
+    new CustomValidationPipe(),
   );
 
   const configService = app.select(SharedModule).get(ApiConfigService);
@@ -87,10 +88,15 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     app.enableShutdownHooks();
   }
 
+  app.use((req: Request, res: Response, next) => {
+    logger.debug('===TRIGGER GLOBAL MIDDLEWARE===');
+    next();
+  });
+
   const port = configService.appConfig.port;
   await app.listen(port);
 
-  console.info(`server running on ${await app.getUrl()}`);
+  //   console.info(`server running on ${await app.getUrl()}`);
 
   return app;
 }

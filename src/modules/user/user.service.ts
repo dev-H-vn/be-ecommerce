@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { plainToClass } from 'class-transformer';
 import { type FindOptionsWhere, Repository } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 
@@ -11,12 +10,9 @@ import { IFile } from '../../interfaces';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
 import { UserRegisterDto } from '../auth/dto/user-register.dto';
-import { CreateSettingsCommand } from './commands/create-settings.command';
-import { CreateSettingsDto } from './dtos/create-settings.dto';
 import { type UserDto } from './dtos/user.dto';
 import { type UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import { UserEntity } from './user.entity';
-import { type UserSettingsEntity } from './user-settings.entity';
 
 @Injectable()
 export class UserService {
@@ -28,9 +24,6 @@ export class UserService {
     private commandBus: CommandBus,
   ) {}
 
-  /**
-   * Find single user
-   */
   findOne(findData: FindOptionsWhere<UserEntity>): Promise<UserEntity | null> {
     return this.userRepository.findOneBy(findData);
   }
@@ -74,14 +67,6 @@ export class UserService {
 
     await this.userRepository.save(user);
 
-    user.settings = await this.createSettings(
-      user.id,
-      plainToClass(CreateSettingsDto, {
-        isEmailVerified: false,
-        isPhoneVerified: false,
-      }),
-    );
-
     return user;
   }
 
@@ -106,14 +91,5 @@ export class UserService {
     }
 
     return userEntity.toDto();
-  }
-
-  async createSettings(
-    userId: Uuid,
-    createSettingsDto: CreateSettingsDto,
-  ): Promise<UserSettingsEntity> {
-    return this.commandBus.execute<CreateSettingsCommand, UserSettingsEntity>(
-      new CreateSettingsCommand(userId, createSettingsDto),
-    );
   }
 }

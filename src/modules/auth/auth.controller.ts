@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -55,15 +56,13 @@ export class AuthController {
   async userRegister(
     @Body() userRegisterDto: UserRegisterDto,
     @UploadedFile() file?: IFile,
-  ): Promise<UserDto> {
+  ): Promise<string> {
     const createdUser = await this.userService.createUser(
       userRegisterDto,
       file,
     );
 
-    return createdUser.toDto({
-      isActive: true,
-    });
+    return 'ok';
   }
 
   @Version('1')

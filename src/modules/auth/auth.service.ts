@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { validateHash } from '../../common/utils';
@@ -34,7 +34,7 @@ export class AuthService {
 
   async validateUser(userLoginDto: UserLoginDto): Promise<UserEntity> {
     const user = await this.userService.findOne({
-      email: userLoginDto.email,
+      userName: userLoginDto.userName,
     });
 
     const isPasswordValid = await validateHash(

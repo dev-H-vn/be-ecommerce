@@ -22,6 +22,7 @@ export class QueryFailedFilter implements ExceptionFilter<QueryFailedError> {
   ) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
 
     const status = exception.constraint?.startsWith('UQ')
       ? HttpStatus.CONFLICT
@@ -33,6 +34,8 @@ export class QueryFailedFilter implements ExceptionFilter<QueryFailedError> {
       message: exception.constraint
         ? constraintErrors[exception.constraint]
         : undefined,
+      timestamp: new Date().toISOString(),
+      path: request.url,
     });
   }
 }
