@@ -36,14 +36,11 @@ module.exports = {
     'n',
   ],
   rules: {
-    'no-unused-variable': 'off',
+    'no-unused-vars': 'warn',
+    'no-unused-variable': 'warn',
     'n/no-extraneous-import': 'off',
     'n/no-missing-import': 'off',
     'canonical/filename-match-exported': 'error',
-    'canonical/no-unused-exports': [
-      'error',
-      { tsConfigPath: './tsconfig.eslint.json' },
-    ],
     'canonical/no-restricted-strings': 'error',
     'canonical/no-use-extend-native': 'off',
     'canonical/prefer-inline-type-import': 'error',
@@ -75,8 +72,6 @@ module.exports = {
     /**
      * plugin:typescript-eslint
      */
-    'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     'max-params': ['error', 7],
     '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
@@ -221,10 +216,6 @@ module.exports = {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-shadow': 'error',
-    '@typescript-eslint/no-unused-expressions': ['error'],
-    /**
-     * plugin:eslint
-     */
     'no-await-in-loop': 'error',
     'padding-line-between-statements': [
       'error',
@@ -333,7 +324,6 @@ module.exports = {
     'no-trailing-spaces': 'error',
     'no-undef-init': 'error',
     'no-unsafe-finally': 'error',
-    'no-unused-labels': 'error',
     'no-var': 'error',
     'object-shorthand': 'error',
     'prefer-const': 'error',

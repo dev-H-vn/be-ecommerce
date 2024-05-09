@@ -1,9 +1,9 @@
 import { EmailField, StringField } from '../../../decorators';
 
 export class UserLoginDto {
-  @EmailField()
+  @StringField({ required: true })
   readonly userName!: string;
 
-  @StringField()
+  @StringField({ required: true, minLength: 6 })
   readonly password!: string;
 }

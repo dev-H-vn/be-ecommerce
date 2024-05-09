@@ -1,13 +1,21 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-import { AbstractTranslationEntity } from '../../common/abstract.entity';
 import { UseDto } from '../../decorators';
 import { PostTranslationDto } from './dtos/post-translation.dto';
 import { PostEntity } from './post.entity';
 
 @Entity({ name: 'post_translations' })
 @UseDto(PostTranslationDto)
-export class PostTranslationEntity extends AbstractTranslationEntity<PostTranslationDto> {
+export class PostTranslationEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id!: Uuid;
+
   @Column()
   title!: string;
 

@@ -12,7 +12,7 @@ import {
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { RoleType } from '../../constants';
-import { ApiFile, Auth, AuthUser } from '../../decorators';
+import { ApiFile, Auth, AuthUser, UseDto } from '../../decorators';
 import { IFile } from '../../interfaces';
 import { UserDto } from '../user/dtos/user.dto';
 import { UserEntity } from '../user/user.entity';
@@ -45,6 +45,7 @@ export class AuthController {
       userId: userEntity.id,
       role: userEntity.role,
     });
+    console.log('userLoginDto', userEntity.toDto(), token);
 
     return new LoginPayloadDto(userEntity.toDto(), token);
   }
@@ -52,17 +53,11 @@ export class AuthController {
   @Post('register')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: UserDto, description: 'Successfully Registered' })
-  @ApiFile({ name: 'avatar' })
   async userRegister(
     @Body() userRegisterDto: UserRegisterDto,
     @UploadedFile() file?: IFile,
-  ): Promise<string> {
-    const createdUser = await this.userService.createUser(
-      userRegisterDto,
-      file,
-    );
-
-    return 'ok';
+  ): Promise<UserDto> {
+    return await this.userService.createUser(userRegisterDto, file);
   }
 
   @Version('1')

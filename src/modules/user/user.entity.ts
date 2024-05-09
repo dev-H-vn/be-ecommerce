@@ -10,8 +10,8 @@ import { UserSettingsEntity } from './user-settings.entity';
 @Entity({ name: 'users' })
 @UseDto(UserDto)
 export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
-  @Column({ nullable: true, type: 'varchar' })
-  userName!: string | null;
+  @Column({ type: 'varchar' })
+  userName!: string;
 
   @Column({ nullable: true, type: 'varchar' })
   firstName!: string | null;
@@ -25,8 +25,8 @@ export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
   @Column({ unique: true, nullable: true, type: 'varchar' })
   email!: string | null;
 
-  @Column({ nullable: true, type: 'varchar' })
-  password!: string | null;
+  @Column({ type: 'varchar' })
+  password!: string;
 
   @Column({ nullable: true, type: 'varchar' })
   phone!: string | null;

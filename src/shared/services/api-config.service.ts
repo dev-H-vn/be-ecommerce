@@ -5,7 +5,6 @@ import { type TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { isNil } from 'lodash';
 import { default as parse, type Units } from 'parse-duration';
 
-import { UserSubscriber } from '../../entity-subscribers/user-subscriber';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
 
 @Injectable()
@@ -80,6 +79,10 @@ export class ApiConfigService {
   get postgresConfig(): TypeOrmModuleOptions {
     const entities = [__dirname + '/../../modules/**/*.entity{.ts,.js}'];
     const migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
+    console.log(
+      "this.getString('DB_SYNCHRONIZE')",
+      this.getString('DB_SYNCHRONIZE'),
+    );
 
     return {
       entities,
@@ -93,8 +96,8 @@ export class ApiConfigService {
       username: this.getString('DB_USERNAME'),
       password: this.getString('DB_PASSWORD'),
       database: this.getString('DB_DATABASE'),
-      subscribers: [UserSubscriber],
       migrationsRun: false,
+      synchronize: this.getString('DB_SYNCHRONIZE') === 'true',
       logging: this.getBoolean('ENABLE_ORM_LOGS'),
       namingStrategy: new SnakeNamingStrategy(),
     };

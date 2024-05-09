@@ -37,19 +37,6 @@ export class CreatePostHandler
     await this.postRepository.save(postEntity);
 
     // FIXME: Create generic function for translation creation
-    for (const createTranslationDto of createPostDto.title) {
-      const languageCode = createTranslationDto.languageCode;
-      const translationEntity = this.postTranslationRepository.create({
-        postId: postEntity.id,
-        languageCode,
-        title: createTranslationDto.text,
-        description: find(createPostDto.description, {
-          languageCode,
-        })!.text,
-      });
-
-      translations.push(translationEntity);
-    }
 
     await this.postTranslationRepository.save(translations);
 

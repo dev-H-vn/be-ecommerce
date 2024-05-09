@@ -13,6 +13,7 @@ import { UserRegisterDto } from '../auth/dto/user-register.dto';
 import { type UserDto } from './dtos/user.dto';
 import { type UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import { UserEntity } from './user.entity';
+import { generateHash } from 'common/utils';
 
 @Injectable()
 export class UserService {
@@ -65,8 +66,9 @@ export class UserService {
       user.avatar = await this.awsS3Service.uploadImage(file);
     }
 
+    console.log('user111', user);
+    user.password = generateHash(user.password);
     await this.userRepository.save(user);
-
     return user;
   }
 

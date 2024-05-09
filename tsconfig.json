@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": ".",
     "module": "commonjs",
     "declaration": false,
     "noImplicitAny": false,
@@ -19,8 +19,8 @@
     "incremental": true,
     "strictNullChecks": true,
     "skipLibCheck": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    // "noUnusedLocals": true,
     "strict": true
   },
   "include": ["src/**/*"],

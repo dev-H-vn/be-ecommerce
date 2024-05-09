@@ -19,8 +19,8 @@ export class UserDto extends AbstractDto {
   @StringFieldOptional({ nullable: true })
   lastName?: string | null;
 
-  @StringFieldOptional({ nullable: true })
-  username!: string;
+  @StringFieldOptional()
+  userName!: string;
 
   @EnumFieldOptional(() => RoleType)
   role?: RoleType;
@@ -36,15 +36,4 @@ export class UserDto extends AbstractDto {
 
   @BooleanFieldOptional()
   isActive?: boolean;
-
-  constructor(user: UserEntity, options?: UserDtoOptions) {
-    super(user);
-    this.firstName = user.firstName;
-    this.lastName = user.lastName;
-    this.role = user.role;
-    this.email = user.email;
-    this.avatar = user.avatar;
-    this.phone = user.phone;
-    this.isActive = options?.isActive;
-  }
 }

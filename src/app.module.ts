@@ -1,22 +1,16 @@
 import './boilerplate.polyfill';
 
-import path from 'node:path';
-
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-// import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClsModule } from 'nestjs-cls';
+
 import {
   AcceptLanguageResolver,
   HeaderResolver,
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
-// import { DataSource } from 'typeorm';
-// import { addTransactionalDataSource } from 'typeorm-transactional';
-
-// import { AuthModule } from './modules/auth/auth.module';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
 // import { PostModule } from './modules/post/post.module';
 import { UserModule } from './modules/user/user.module';
@@ -25,7 +19,6 @@ import { SharedModule } from './shared/shared.module';
 import { VersionMiddleware } from 'middlewares/version.middleware';
 import { APP_GUARD } from '@nestjs/core';
 import { CustomThrottlerGuard } from 'guards/customThrottler.guard';
-import { UserService } from 'modules/user/user.service';
 import { AuthModule } from 'modules/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';

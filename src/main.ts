@@ -25,6 +25,7 @@ import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 import { LoggingInterceptor } from 'interceptors/logging.interceptor';
 import { CustomValidationPipe } from 'decorators';
+import { ExcludeNullInterceptor } from 'interceptors/exclude-null.interceptor';
 
 export async function bootstrap(): Promise<NestExpressApplication> {
   initializeTransactionalContext();
@@ -50,6 +51,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(reflector),
     new LoggingInterceptor(),
+    new ExcludeNullInterceptor(),
   );
 
   app.useGlobalPipes(
