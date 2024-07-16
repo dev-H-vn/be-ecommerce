@@ -79,13 +79,16 @@ export class ParseTypeParamsPipe implements PipeTransform {
         if (typeof value !== 'string') {
           throw new BadRequestException('Value must is string.');
         }
-      case 'string':
+        break;
+      case 'number':
         if (typeof value !== 'number') {
           throw new BadRequestException('Value must is number.');
         }
+        break;
       case 'uuid':
         if (!isUUID(value))
           throw new BadRequestException('Value must is uuid.');
+        break;
       default:
         return value;
     }

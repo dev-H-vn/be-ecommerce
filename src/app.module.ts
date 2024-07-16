@@ -5,12 +5,6 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ClsModule } from 'nestjs-cls';
 
-import {
-  AcceptLanguageResolver,
-  HeaderResolver,
-  I18nModule,
-  QueryResolver,
-} from 'nestjs-i18n';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
 // import { PostModule } from './modules/post/post.module';
 import { UserModule } from './modules/user/user.module';

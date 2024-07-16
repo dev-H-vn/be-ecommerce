@@ -88,7 +88,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     app.enableShutdownHooks();
   }
 
-  app.use((req: Request, res: Response, next) => {
+  app.use((req: Request, res: Response, next: any) => {
     logger.debug('===TRIGGER GLOBAL MIDDLEWARE===');
     next();
   });
