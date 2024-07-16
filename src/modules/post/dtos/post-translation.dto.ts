@@ -1,4 +1,4 @@
-import { LanguageCode } from '../../../constants';
+import { LanguageCode } from '../../../constant';
 import { EnumFieldOptional, StringFieldOptional } from '../../../decorators';
 import type { PostTranslationEntity } from '../post-translation.entity';
 

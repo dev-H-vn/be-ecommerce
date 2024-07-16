@@ -2,7 +2,7 @@ import type { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import type { RoleType } from '../constants';
+import type { RoleType } from '../constant';
 import type { UserEntity } from '../modules/user/user.entity';
 
 @Injectable()

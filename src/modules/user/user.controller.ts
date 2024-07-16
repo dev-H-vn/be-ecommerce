@@ -16,7 +16,7 @@ import {
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { PageDto } from '../../common/dto/page.dto';
-import { RoleType } from '../../constants';
+import { RoleType } from '../../constant';
 import {
   ApiPageResponse,
   Auth,

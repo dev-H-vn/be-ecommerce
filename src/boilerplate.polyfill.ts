@@ -10,7 +10,7 @@ import type { CreateTranslationDto } from './common/dto/create-translation.dto';
 import { PageDto } from './common/dto/page.dto';
 import { PageMetaDto } from './common/dto/page-meta.dto';
 import type { PageOptionsDto } from './common/dto/page-options.dto';
-import type { LanguageCode } from './constants/language-code';
+import type { LanguageCode } from './constant/language-code';
 import type { KeyOfType } from './types';
 
 declare global {

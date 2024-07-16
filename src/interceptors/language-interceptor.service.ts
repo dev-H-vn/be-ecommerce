@@ -5,7 +5,7 @@ import type {
 } from '@nestjs/common';
 import { Injectable, UseInterceptors } from '@nestjs/common';
 
-import { LanguageCode } from '../constants';
+import { LanguageCode } from '../constant';
 import { ContextProvider } from '../providers';
 
 @Injectable()

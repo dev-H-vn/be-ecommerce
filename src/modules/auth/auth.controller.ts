@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
-import { RoleType } from '../../constants';
+import { RoleType } from '../../constant';
 import { ApiFile, Auth, AuthUser, UseDto } from '../../decorators';
 import { IFile } from '../../interfaces';
 import { UserDto } from '../user/dtos/user.dto';
@@ -29,6 +29,16 @@ export class AuthController {
     private userService: UserService,
     private authService: AuthService,
   ) {}
+
+  @Post('register/shop')
+  @HttpCode(HttpStatus.OK)
+  //   @ApiOkResponse({ type: UserDto, description: 'Successfully Registered' })
+  async shopRegister(
+    @Body() userRegisterDto: UserRegisterDto,
+    @UploadedFile() file?: IFile,
+  ): Promise<UserDto> {
+    return await this.userService.createUser(userRegisterDto, file);
+  }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)

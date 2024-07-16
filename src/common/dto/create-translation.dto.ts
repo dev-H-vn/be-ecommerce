@@ -1,4 +1,4 @@
-import { LanguageCode } from '../../constants';
+import { LanguageCode } from '../../constant';
 import { EnumField, StringField } from '../../decorators';
 
 export class CreateTranslationDto {

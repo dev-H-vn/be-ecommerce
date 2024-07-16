@@ -6,8 +6,8 @@ import {
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import type { RoleType } from '../../constants';
-import { TokenType } from '../../constants';
+import type { RoleType } from '../../constant';
+import { TokenType } from '../../constant';
 import { ApiConfigService } from '../../shared/services/api-config.service';
 import type { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';

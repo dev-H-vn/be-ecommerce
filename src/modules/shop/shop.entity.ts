@@ -7,8 +7,11 @@ export class ShopEntity extends AbstractEntity {
   shopName!: string;
 
   @Column({ type: 'varchar' })
-  publicKey!: string;
+  password!: string;
 
   @Column({ type: 'varchar' })
   refreshToken!: string;
+
+  @Column({ unique: true, nullable: true, type: 'varchar' })
+  email!: string | null;
 }

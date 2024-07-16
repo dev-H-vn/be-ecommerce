@@ -1,5 +1,5 @@
 import { AbstractDto } from '../../../common/dto/abstract.dto';
-import { RoleType } from '../../../constants';
+import { RoleType } from '../../../constant';
 import {
   BooleanFieldOptional,
   EmailFieldOptional,

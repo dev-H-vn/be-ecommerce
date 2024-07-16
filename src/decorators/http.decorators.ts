@@ -13,7 +13,7 @@ import {
 import { ArgumentMetadata, type Type } from '@nestjs/common/interfaces';
 import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
-import { type RoleType } from '../constants';
+import { type RoleType } from '../constant';
 import { AdminGuard } from '../guards/auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { AuthUserInterceptor } from '../interceptors/auth-user-interceptor.service';

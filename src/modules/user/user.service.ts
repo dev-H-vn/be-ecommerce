@@ -66,7 +66,6 @@ export class UserService {
       user.avatar = await this.awsS3Service.uploadImage(file);
     }
 
-    console.log('user111', user);
     user.password = generateHash(user.password);
     await this.userRepository.save(user);
     return user;

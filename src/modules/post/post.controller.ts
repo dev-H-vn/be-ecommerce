@@ -17,7 +17,7 @@ import {
 } from '@nestjs/swagger';
 
 import type { PageDto } from '../../common/dto/page.dto';
-import { RoleType } from '../../constants';
+import { RoleType } from '../../constant';
 import { ApiPageResponse, Auth, AuthUser, UUIDParam } from '../../decorators';
 import { UseLanguageInterceptor } from '../../interceptors/language-interceptor.service';
 import { UserEntity } from '../user/user.entity';
