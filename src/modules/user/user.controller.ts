@@ -18,7 +18,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PageDto } from '../../common/dto/page.dto';
 import { RoleType } from '../../constants';
 import {
-  ApiPageOkResponse,
+  ApiPageResponse,
   Auth,
   AuthUser,
   ParseCustomControllerPipe,
@@ -61,7 +61,7 @@ export class UserController {
   @Auth([RoleType.USER])
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(ExcludeNullInterceptor)
-  @ApiPageOkResponse({
+  @ApiPageResponse({
     description: 'Get users list',
     type: PageDto,
   })

@@ -7,8 +7,8 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { type ValidationError } from 'class-validator';
-import { type Response } from 'express';
+import type { ValidationError } from 'class-validator';
+import type { Response } from 'express';
 import _ from 'lodash';
 
 @Catch(HttpException)

@@ -1,10 +1,5 @@
-import {
-  DateField,
-  DYNAMIC_TRANSLATION_DECORATOR_KEY,
-  UUIDField,
-} from '../../decorators';
-import { ContextProvider } from '../../providers';
-import { type AbstractEntity } from '../abstract.entity';
+import { DateField, UUIDField } from '../../decorators';
+import type { AbstractEntity } from '../abstract.entity';
 
 export class AbstractDto {
   @UUIDField()

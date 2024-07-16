@@ -1,8 +1,8 @@
+import type { PipeTransform } from '@nestjs/common';
 import {
   applyDecorators,
   Param,
   ParseUUIDPipe,
-  type PipeTransform,
   UseGuards,
   UseInterceptors,
   Injectable,
@@ -21,7 +21,6 @@ import { PublicRoute } from './public-route.decorator';
 import { Roles } from './roles.decorator';
 import { isObjectIdOrHexString } from 'mongoose';
 import { isUUID } from 'class-validator';
-import { QueryFailedError } from 'typeorm';
 
 export function Auth(
   roles: RoleType[] = [],

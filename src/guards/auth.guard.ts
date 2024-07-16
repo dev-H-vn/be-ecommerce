@@ -4,24 +4,8 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-// import {
-//   AuthGuard as NestAuthGuard,
-//   type IAuthGuard,
-//   type Type,
-// } from '@nestjs/passport';
+
 import { Observable } from 'rxjs';
-
-// export function AuthGuard(
-//   options?: Partial<{ public: boolean }>,
-// ): Type<IAuthGuard> {
-//   const strategies = ['jwt'];
-
-//   if (options?.public) {
-//     strategies.push('public');
-//   }
-
-//   return NestAuthGuard(strategies);
-// }
 
 @Injectable()
 export class AuthGuard implements CanActivate {

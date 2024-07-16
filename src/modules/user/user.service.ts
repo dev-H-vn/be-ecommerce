@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { type FindOptionsWhere, Repository } from 'typeorm';
 import { Transactional } from 'typeorm-transactional';
 
-import { type PageDto } from '../../common/dto/page.dto';
+import type { PageDto } from '../../common/dto/page.dto';
 import { FileNotImageException, UserNotFoundException } from '../../exceptions';
 import { IFile } from '../../interfaces';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
