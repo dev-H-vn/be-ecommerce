@@ -1,4 +1,11 @@
-import { Column, Entity, OneToMany, OneToOne, VirtualColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  VirtualColumn,
+} from 'typeorm';
 
 import { AbstractEntity } from '../../common/abstract.entity';
 import { RoleType } from '../../constants';

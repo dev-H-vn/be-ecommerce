@@ -79,10 +79,6 @@ export class ApiConfigService {
   get postgresConfig(): TypeOrmModuleOptions {
     const entities = [__dirname + '/../../modules/**/*.entity{.ts,.js}'];
     const migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
-    console.log(
-      "this.getString('DB_SYNCHRONIZE')",
-      this.getString('DB_SYNCHRONIZE'),
-    );
 
     return {
       entities,
@@ -90,13 +86,11 @@ export class ApiConfigService {
       keepConnectionAlive: !this.isTest,
       dropSchema: this.isTest,
       type: 'postgres',
-      name: 'default',
       host: this.getString('DB_HOST'),
       port: this.getNumber('DB_PORT'),
       username: this.getString('DB_USERNAME'),
       password: this.getString('DB_PASSWORD'),
       database: this.getString('DB_DATABASE'),
-      migrationsRun: false,
       synchronize: this.getString('DB_SYNCHRONIZE') === 'true',
       logging: this.getBoolean('ENABLE_ORM_LOGS'),
       namingStrategy: new SnakeNamingStrategy(),

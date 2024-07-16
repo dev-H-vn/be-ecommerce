@@ -47,9 +47,9 @@ import { DataSource } from 'typeorm';
     }),
     TypeOrmModule.forRootAsync({
       imports: [SharedModule],
+      inject: [ApiConfigService],
       useFactory: (configService: ApiConfigService) =>
         configService.postgresConfig,
-      inject: [ApiConfigService],
       dataSourceFactory: (options) => {
         if (!options) {
           throw new Error('Invalid options passed');
