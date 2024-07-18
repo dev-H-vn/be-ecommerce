@@ -17,7 +17,6 @@ import { initializeTransactionalContext } from 'typeorm-transactional';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
 import { QueryFailedFilter } from './filters/query-failed.filter';
-import { TranslationInterceptor } from './interceptors/translation-interceptor.service';
 import { setupSwagger } from './setup-swagger';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';

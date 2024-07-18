@@ -17,11 +17,13 @@ import { AuthModule } from 'modules/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
+import { ShopModule } from 'modules/shop/shop.module';
 
 @Module({
   imports: [
     AuthModule,
     UserModule,
+    ShopModule,
     ClsModule.forRoot({
       global: true,
       middleware: {

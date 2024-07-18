@@ -20,6 +20,6 @@ export class ShopRegisterDto {
   @PasswordField({ minLength: 6 })
   readonly password!: string;
 
-  @EmailFieldOptional({ nullable: true })
-  email?: string | null;
+  @EmailFieldOptional({ nullable: false })
+  email!: string;
 }

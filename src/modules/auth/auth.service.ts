@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { validateHash } from '../../common/utils';
@@ -13,6 +13,7 @@ import type { UserLoginDto } from './dto/user-login.dto';
 import { Repository } from 'typeorm';
 import { KeyEntity } from 'modules/auth/key.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { KeyObject } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -35,20 +36,39 @@ export class AuthService {
       publicKey: publicKeySting,
     });
 
-    return token ? publicKey : null;
+    return token ? publicKeySting : null;
   }
 
-  async createAccessToken(data: {
+  async createTokenPair(data: {
+    publicKey: string;
+    privateKey: string;
     role: RoleType;
     userId: Uuid;
   }): Promise<TokenPayloadDto> {
-    return new TokenPayloadDto({
-      expiresIn: this.configService.authConfig.jwtExpirationTime,
-      accessToken: await this.jwtService.signAsync({
+    const expiresIn = this.configService.authConfig.jwtExpirationTime;
+    const accessToken = await this.jwtService.signAsync(
+      {
         userId: data.userId,
         type: TokenType.ACCESS_TOKEN,
         role: data.role,
-      }),
+      },
+      { expiresIn: '2d', privateKey: data.privateKey },
+    );
+    const refetchToken = await this.jwtService.signAsync(
+      {
+        userId: data.userId,
+        type: TokenType.REFRESH_TOKEN,
+        role: data.role,
+      },
+      { expiresIn: '2d', privateKey: data.privateKey },
+    );
+    await this.jwtService.verifyAsync(accessToken, {
+      publicKey: data.publicKey,
+    });
+    return new TokenPayloadDto({
+      accessToken,
+      expiresIn,
+      refetchToken,
     });
   }
 

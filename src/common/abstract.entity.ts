@@ -1,4 +1,5 @@
 import {
+  Column,
   CreateDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -7,6 +8,14 @@ import {
 import type { Constructor } from '../types';
 import type { AbstractDto } from './dto/abstract.dto';
 
+/**
+ * Abstract Entity
+ * @author Narek Hakobyan <narek.hakobyan.07@gmail.com>
+ *
+ * @description This class is an abstract class for all entities.
+ * It's experimental and recommended using it only in microservice architecture,
+ * otherwise just delete and use your own entity.
+ */
 export abstract class AbstractEntity<
   DTO extends AbstractDto = AbstractDto,
   O = never,
@@ -24,12 +33,10 @@ export abstract class AbstractEntity<
   })
   updatedAt!: Date;
 
-  public dtoClass?: Constructor<DTO, [AbstractEntity, O?]>;
+  private dtoClass?: Constructor<DTO, [AbstractEntity, O?]>;
 
   toDto(options?: O): DTO {
     const dtoClass = this.dtoClass;
-
-    console.log('dtoClass', this.dtoClass, options);
 
     if (!dtoClass) {
       throw new Error(

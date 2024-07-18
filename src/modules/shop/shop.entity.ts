@@ -1,8 +1,11 @@
 import { AbstractEntity } from 'common/abstract.entity';
+import { UseDto } from 'decorators';
+import { ShopDto } from 'modules/shop/dto/shop.dto';
 import { Column, Entity } from 'typeorm';
 
+@UseDto(ShopDto)
 @Entity({ name: 'shops' })
-export class ShopEntity extends AbstractEntity {
+export class ShopEntity extends AbstractEntity<ShopDto> {
   @Column({ type: 'varchar' })
   shopName!: string;
 

@@ -2,13 +2,21 @@ import { NumberField, StringField } from '../../../decorators';
 
 export class TokenPayloadDto {
   @NumberField()
-  expiresIn: number;
+  expiresIn: string;
 
   @StringField()
   accessToken: string;
 
-  constructor(data: { expiresIn: number; accessToken: string }) {
+  @StringField()
+  refetchToken: string;
+
+  constructor(data: {
+    expiresIn: string;
+    accessToken: string;
+    refetchToken: string;
+  }) {
     this.expiresIn = data.expiresIn;
     this.accessToken = data.accessToken;
+    this.refetchToken = data.refetchToken;
   }
 }

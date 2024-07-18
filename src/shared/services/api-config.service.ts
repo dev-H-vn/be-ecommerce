@@ -24,7 +24,7 @@ export class ApiConfigService {
     return this.nodeEnv === 'test';
   }
 
-  private getNumber(key: string): number {
+  public getNumber(key: string): number {
     const value = this.get(key);
 
     try {
@@ -125,7 +125,7 @@ export class ApiConfigService {
     return {
       privateKey: this.getString('JWT_PRIVATE_KEY'),
       publicKey: this.getString('JWT_PUBLIC_KEY'),
-      jwtExpirationTime: this.getNumber('JWT_EXPIRATION_TIME'),
+      jwtExpirationTime: this.get('JWT_EXPIRATION_TIME'),
     };
   }
 
