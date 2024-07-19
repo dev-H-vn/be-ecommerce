@@ -1,3 +1,4 @@
+import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 
 export function generateHash(password: string): string {

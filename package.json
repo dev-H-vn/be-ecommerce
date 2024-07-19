@@ -14,7 +14,6 @@
     "migration:create": "yarn run typeorm -- migration:create",
     "migration:run": "yarn run typeorm -d ormconfig.ts migration:run",
     "migration:revert": "yarn run typeorm -d ormconfig.ts migration:revert",
-    "new": "hygen new",
     "schema:drop": "yarn run typeorm schema:drop",
     "watch:dev": "ts-node-dev src/main.ts",
     "debug:dev": "cross-env TS_NODE_CACHE=false ts-node-dev --inspect --ignore '/^src/.*\\.spec\\.ts$/' src/main.ts",
@@ -76,7 +75,6 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@handfish/hygen": "^6.1.6",
     "@nestjs/cli": "^10.2.1",
     "@nestjs/testing": "^10.3.0",
     "@types/bcrypt": "^5.0.2",

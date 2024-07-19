@@ -13,7 +13,6 @@ import type { UserLoginDto } from './dto/user-login.dto';
 import { Repository } from 'typeorm';
 import { KeyEntity } from 'modules/auth/key.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { KeyObject } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -28,12 +27,14 @@ export class AuthService {
   async createKeyToken(data: {
     publicKey: string;
     userId: Uuid;
+    role: RoleType;
   }): Promise<string | null> {
-    const { publicKey, userId } = data;
+    const { publicKey, userId, role } = data;
     const publicKeySting = publicKey.toString();
-    const token = await this.keyRepository.create({
-      ownerKey: userId,
+    const token = await this.keyRepository.save({
+      ownerId: userId,
       publicKey: publicKeySting,
+      role: role,
     });
 
     return token ? publicKeySting : null;

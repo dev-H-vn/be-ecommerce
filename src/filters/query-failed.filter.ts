@@ -29,7 +29,7 @@ export class QueryFailedFilter implements ExceptionFilter<QueryFailedError> {
       error: STATUS_CODES[status],
       message: exception.constraint
         ? constraintErrors[exception.constraint]
-        : undefined,
+        : exception.message,
       timestamp: new Date().toISOString(),
       path: request.url,
     });

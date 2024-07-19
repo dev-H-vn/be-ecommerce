@@ -7,6 +7,7 @@ import { generateHash } from 'common/utils';
 import { AuthService } from 'modules/auth/auth.service';
 import crypto from 'crypto';
 import { RoleType } from 'constant';
+import { v4 as uuidV4 } from 'uuid';
 
 @Injectable()
 export class ShopService {
@@ -29,6 +30,7 @@ export class ShopService {
 
     const passWordHash = generateHash(password);
     const newShop = await this.shopRepository.create({
+      id: uuidV4(),
       email,
       shopName,
       password: passWordHash,
@@ -45,14 +47,11 @@ export class ShopService {
           format: 'pem',
         },
       });
-      console.log(
-        '🐉 ~ ShopService ~ register ~  { privateKey, publicKey } ~ 🚀\n',
-        { privateKey: privateKey.toString(), publicKey: publicKey.toString() },
-      );
 
       const publicKeyString = await this.authService.createKeyToken({
         publicKey,
         userId: newShop.id,
+        role: RoleType.SHOP,
       });
       if (!publicKeyString) {
         throw new BadRequestException('publicKeyString error');
@@ -68,11 +67,6 @@ export class ShopService {
         ...newShop,
         refreshToken: tokens.refetchToken,
       });
-      console.log(
-        '🐉 ~ ShopService ~ register ~ newShop ~ 🚀\n',
-        newShop,
-        tokens,
-      );
     }
 
     return newShop;
