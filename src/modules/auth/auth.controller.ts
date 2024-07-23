@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -7,9 +6,10 @@ import {
   HttpStatus,
   Post,
   UploadedFile,
+  UseGuards,
   Version,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { RoleType } from '../../constant';
 import { Auth, AuthUser } from '../../decorators';
@@ -22,7 +22,11 @@ import { UserRegisterDto } from './dto/user-register.dto';
 import { ShopRegisterDto } from 'modules/auth/dto/register.dto';
 import { ShopService } from 'modules/shop/shop.service';
 import { ShopDto } from 'modules/shop/dto/shop.dto';
+import { ShopLoginDto } from 'modules/auth/dto/login.dto';
+import { TokenPayloadDto } from 'modules/auth/dto/token-payload.dto';
+import { AuthGuard } from 'guards/auth.guard';
 
+@ApiBearerAuth()
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
@@ -44,25 +48,29 @@ export class AuthController {
     return await this.shopService.register(shopRegisterDto);
   }
 
-  //   @Post('login')
-  //   @HttpCode(HttpStatus.OK)
-  //   @ApiOkResponse({
-  //     type: LoginPayloadDto,
-  //     description: 'User info with access token',
-  //   })
-  //   async userLogin(
-  //     @Body() userLoginDto: UserLoginDto,
-  //   ): Promise<LoginPayloadDto> {
-  //     const userEntity = await this.authService.validateUser(userLoginDto);
+  @Post('login/shop')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    type: ShopLoginDto,
+    description: 'User info with access token',
+  })
+  async userLogin(@Body() userLoginDto: ShopLoginDto): Promise<{
+    shop: ShopDto;
+    tokens: TokenPayloadDto;
+  }> {
+    return await this.shopService.login(userLoginDto);
+  }
 
-  //     const token = await this.authService.createAccessToken({
-  //       userId: userEntity.id,
-  //       role: userEntity.role,
-  //     });
-  //     console.log('userLoginDto', userEntity.toDto(), token);
-
-  //     return new LoginPayloadDto(userEntity.toDto(), token);
-  //   }
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @ApiOkResponse({
+    type: ShopLoginDto,
+    description: 'User info with access token',
+  })
+  async logout(@Body() userLoginDto: ShopLoginDto): Promise<any> {
+    // return await this.shopService.login(userLoginDto);
+  }
 
   @Post('register')
   @HttpCode(HttpStatus.OK)

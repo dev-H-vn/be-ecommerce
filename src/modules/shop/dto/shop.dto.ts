@@ -8,8 +8,8 @@ export class ShopDto extends AbstractDto {
   @StringField()
   shopName!: string;
 
-  @StringField()
-  refreshToken!: string;
+  //   @StringField()
+  //   refreshToken!: string;
 
   @EmailField()
   email!: string | null;

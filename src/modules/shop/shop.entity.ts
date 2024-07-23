@@ -12,9 +12,6 @@ export class ShopEntity extends AbstractEntity<ShopDto> {
   @Column({ type: 'varchar' })
   password!: string;
 
-  @Column({ type: 'varchar' })
-  refreshToken!: string;
-
   @Column({ unique: true, nullable: true, type: 'varchar' })
   email!: string | null;
 }

@@ -28,16 +28,25 @@ export class AuthService {
     publicKey: string;
     userId: Uuid;
     role: RoleType;
+    refreshToken: string;
   }): Promise<string | null> {
-    const { publicKey, userId, role } = data;
-    const publicKeySting = publicKey.toString();
+    const { publicKey, userId, role, refreshToken } = data;
+    // const publicKeySting = publicKey.toString();
+    // const token = await this.keyRepository.save({
+    //   ownerId: userId,
+    //   publicKey: publicKeySting,
+    //   role: role,
+    // });
+    // return token ? publicKeySting : null;
+
     const token = await this.keyRepository.save({
       ownerId: userId,
-      publicKey: publicKeySting,
+      publicKey,
       role: role,
+      refreshToken,
+      refreshTokenUsed: [],
     });
-
-    return token ? publicKeySting : null;
+    return token ? token.publicKey : null;
   }
 
   async createTokenPair(data: {
@@ -63,9 +72,9 @@ export class AuthService {
       },
       { expiresIn: '2d', privateKey: data.privateKey },
     );
-    await this.jwtService.verifyAsync(accessToken, {
-      publicKey: data.publicKey,
-    });
+    // const aaaa = await this.jwtService.verifyAsync(accessToken, {
+    //   publicKey: data.publicKey,
+    // });
     return new TokenPayloadDto({
       accessToken,
       expiresIn,
@@ -73,20 +82,11 @@ export class AuthService {
     });
   }
 
-  async validateUser(userLoginDto: UserLoginDto): Promise<UserEntity> {
-    const user = await this.userService.findOne({
-      userName: userLoginDto.userName,
-    });
+  async validateToken(accessToken: string): Promise<UserEntity> {
+    // const publicKey = await this.keyRepository.findOne;
+    const resp = await this.jwtService.verifyAsync(accessToken);
+    console.log('🐉 ~ AuthService ~ validateToken ~ resp ~  🚀\n', resp);
 
-    const isPasswordValid = await validateHash(
-      userLoginDto.password,
-      user?.password,
-    );
-
-    if (!isPasswordValid) {
-      throw new UserNotFoundException();
-    }
-
-    return user!;
+    return resp;
   }
 }

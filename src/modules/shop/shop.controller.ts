@@ -9,14 +9,22 @@ import {
 } from '@nestjs/common';
 import { ShopService } from './shop.service';
 import { ShopRegisterDto } from 'modules/auth/dto/register.dto';
+import { ShopLoginDto } from 'modules/auth/dto/login.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('shop')
 @Controller('shop')
 export class ShopController {
   constructor(private readonly shopService: ShopService) {}
 
-  @Post()
+  @Post('/register')
   create(@Body() createShopDto: ShopRegisterDto) {
     return this.shopService.register(createShopDto);
+  }
+
+  @Post('/login')
+  login(@Body() loginShopDto: ShopLoginDto) {
+    return this.shopService.login(loginShopDto);
   }
 
   @Get()

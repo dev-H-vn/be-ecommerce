@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { forwardRef, Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
@@ -12,10 +12,12 @@ import { KeyEntity } from 'modules/auth/key.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ShopModule } from 'modules/shop/shop.module';
 
+@Global()
 @Module({
   imports: [
     forwardRef(() => UserModule),
     forwardRef(() => ShopModule),
+    TypeOrmModule.forFeature([KeyEntity]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       useFactory: (configService: ApiConfigService) => ({
@@ -32,7 +34,6 @@ import { ShopModule } from 'modules/shop/shop.module';
       }),
       inject: [ApiConfigService],
     }),
-    TypeOrmModule.forFeature([KeyEntity]),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, PublicStrategy],

@@ -10,7 +10,7 @@ export class UserLoginDto {
 
 export class ShopLoginDto {
   @StringField({ required: true })
-  readonly shopName!: string;
+  readonly email!: string;
 
   @StringField({ required: true, minLength: 6 })
   readonly password!: string;

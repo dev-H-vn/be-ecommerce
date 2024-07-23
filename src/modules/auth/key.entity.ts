@@ -15,4 +15,10 @@ export class KeyEntity extends AbstractEntity {
   @IsDefined({ message: 'At least one of USER or SHOP must be provided' })
   @Column({ type: 'varchar' })
   role!: RoleType;
+
+  @Column({ type: 'varchar' })
+  refreshToken!: string;
+
+  @Column({ type: 'varchar', array: true })
+  refreshTokenUsed!: string[];
 }
