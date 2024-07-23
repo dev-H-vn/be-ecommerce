@@ -1,7 +1,6 @@
 import type { ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { CommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { find } from 'lodash';
 import { Repository } from 'typeorm';
 
 import type { CreatePostDto } from '../dtos/create-post.dto';

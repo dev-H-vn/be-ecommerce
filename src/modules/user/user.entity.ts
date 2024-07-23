@@ -15,7 +15,7 @@ import type { UserDtoOptions } from './dtos/user.dto';
 import { UserDto } from './dtos/user.dto';
 
 @Entity({ name: 'users' })
-@UseDto(UserDto)
+// @UseDto(UserDto)
 export class UserEntity extends AbstractEntity<UserDto, UserDtoOptions> {
   @Column({ type: 'varchar' })
   userName!: string;

@@ -13,7 +13,6 @@ import { ShopLoginDto } from 'modules/auth/dto/login.dto';
 export class ShopService {
   constructor(
     private authService: AuthService,
-
     @InjectRepository(ShopEntity)
     private shopRepository: Repository<ShopEntity>,
   ) {}

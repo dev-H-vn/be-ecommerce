@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   UploadedFile,
   UseGuards,
   Version,
@@ -68,8 +69,8 @@ export class AuthController {
     type: ShopLoginDto,
     description: 'User info with access token',
   })
-  async logout(@Body() userLoginDto: ShopLoginDto): Promise<any> {
-    // return await this.shopService.login(userLoginDto);
+  async logout(@Req() request: Request & { keyStore: string }): Promise<any> {
+    return await this.authService.logout(request);
   }
 
   @Post('register')

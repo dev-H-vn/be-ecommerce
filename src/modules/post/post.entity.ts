@@ -6,7 +6,7 @@ import { UserEntity } from '../user/user.entity';
 import { PostDto } from './dtos/post.dto';
 
 @Entity({ name: 'posts' })
-@UseDto(PostDto)
+// @UseDto(PostDto)
 export class PostEntity extends AbstractEntity<PostDto> {
   @Column({ type: 'uuid' })
   userId!: Uuid;

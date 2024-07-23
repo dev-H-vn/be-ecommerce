@@ -1,10 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { validateHash } from '../../common/utils';
 import type { RoleType } from '../../constant';
 import { TokenType } from '../../constant';
-import { UserNotFoundException } from '../../exceptions';
 import { ApiConfigService } from '../../shared/services/api-config.service';
 import type { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
@@ -72,9 +70,16 @@ export class AuthService {
       },
       { expiresIn: '2d', privateKey: data.privateKey },
     );
-    // const aaaa = await this.jwtService.verifyAsync(accessToken, {
+
+    // const verifyKey = await this.jwtService.verifyAsync(accessToken.trim(), {
     //   publicKey: data.publicKey,
     // });
+    // console.log(
+    //   '🐉 ~ AuthService ~ verifyKey ~ 🚀\n',
+    //   { verifyKey },
+    //   data.publicKey,
+    //   accessToken,
+    // );
     return new TokenPayloadDto({
       accessToken,
       expiresIn,
@@ -82,11 +87,32 @@ export class AuthService {
     });
   }
 
-  async validateToken(accessToken: string): Promise<UserEntity> {
-    // const publicKey = await this.keyRepository.findOne;
-    const resp = await this.jwtService.verifyAsync(accessToken);
-    console.log('🐉 ~ AuthService ~ validateToken ~ resp ~  🚀\n', resp);
+  async logout(req: Request & { keyStore: string }) {
+    const { keyStore } = req;
+    if (!keyStore) {
+      throw new NotFoundException('Not found keyStore');
+    }
+    await this.keyRepository.delete({ id: keyStore as Uuid });
+    return 'logged out';
+  }
 
-    return resp;
+  async validateToken(
+    accessToken: string,
+    clientId: Uuid,
+  ): Promise<{
+    keyVerified: any;
+    foundKey: KeyEntity;
+  }> {
+    const foundKey = await this.keyRepository.findOne({
+      where: { ownerId: clientId },
+    });
+    if (!foundKey) {
+      throw new NotFoundException('Not found keyStore');
+    }
+    const { publicKey } = foundKey;
+    const keyVerified = await this.jwtService.verifyAsync(accessToken, {
+      publicKey: publicKey,
+    });
+    return { keyVerified, foundKey };
   }
 }

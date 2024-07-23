@@ -32,15 +32,24 @@ export class AuthGuard implements CanActivate {
     try {
       const request = context.switchToHttp().getRequest();
       const { authorization }: any = request.headers;
+      const clientId = request.headers['client-id'];
 
+      if (!clientId || clientId.trim() === '') {
+        throw new UnauthorizedException('Please provide client-id');
+      }
       if (!authorization || authorization.trim() === '') {
         throw new UnauthorizedException('Please provide token');
       }
       const authToken = authorization.replace(/Bearer/gim, '').trim();
-      const resp = await this.authService.validateToken(authToken);
 
-      //   const resp = await this.authService.validateToken(authToken);
-      //   request.decodedData = resp;
+      const { foundKey } = await this.authService.validateToken(
+        authToken,
+        clientId,
+      );
+      if (foundKey.id) {
+        request.keyStore = foundKey.id;
+      }
+
       return true;
     } catch (error: any) {
       console.log('auth error - ', error.message);
