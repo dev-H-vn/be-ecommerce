@@ -11,7 +11,9 @@ import { PublicStrategy } from './public.strategy';
 import { KeyEntity } from 'modules/auth/key.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ShopModule } from 'modules/shop/shop.module';
+import { CheckTokenHandler } from 'modules/auth/queries/check-token-used';
 
+const handlers = [CheckTokenHandler];
 @Global()
 @Module({
   imports: [
@@ -36,7 +38,7 @@ import { ShopModule } from 'modules/shop/shop.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, PublicStrategy],
+  providers: [AuthService, JwtStrategy, PublicStrategy, ...handlers],
   exports: [JwtModule, AuthService],
 })
 export class AuthModule {}

@@ -24,6 +24,7 @@ export class QueryFailedFilter implements ExceptionFilter<QueryFailedError> {
       ? HttpStatus.CONFLICT
       : HttpStatus.INTERNAL_SERVER_ERROR;
 
+    console.log('error', exception.message, exception.constraint);
     response.status(status).json({
       statusCode: status,
       error: STATUS_CODES[status],

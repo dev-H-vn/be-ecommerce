@@ -20,3 +20,8 @@ export class TokenPayloadDto {
     this.refetchToken = data.refetchToken;
   }
 }
+
+export class RefreshTokenDTO {
+  @StringField({ required: true })
+  refetchToken!: string;
+}

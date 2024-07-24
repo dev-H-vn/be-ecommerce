@@ -7,12 +7,15 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 @Entity({ name: 'keys' })
 export class KeyEntity extends AbstractEntity {
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', unique: true })
   ownerId!: Uuid;
 
-  @OneToOne(() => ShopEntity, (ShopEntity) => ShopEntity.id)
-  @JoinColumn({ name: 'owner', referencedColumnName: 'owner_id' })
-  owner!: ShopEntity | UserEntity;
+  //   @OneToOne(() => ShopEntity, (ShopEntity) => ShopEntity.id)
+  //   @JoinColumn({ name: 'owner', referencedColumnName: 'id' })
+  //   owner!: ShopEntity | UserEntity;
+
+  @Column({ type: 'varchar' })
+  privateKey!: string;
 
   @Column({ type: 'varchar' })
   publicKey!: string;
@@ -25,6 +28,6 @@ export class KeyEntity extends AbstractEntity {
   @Column({ type: 'varchar' })
   refreshToken!: string;
 
-  @Column({ type: 'varchar', array: true })
+  @Column({ type: 'json' })
   refreshTokenUsed!: string[];
 }

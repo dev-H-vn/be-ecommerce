@@ -25,6 +25,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const r = exception.getResponse() as { message: ValidationError[] };
 
     this.logger.debug('===TRIGGER GLOBAL FILTER===');
+    console.log('bad request exception');
 
     response
       .status(statusCode)

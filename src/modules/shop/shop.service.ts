@@ -48,6 +48,7 @@ export class ShopService {
 
       const publicKeyString = await this.authService.createKeyToken({
         publicKey,
+        privateKey,
         userId: newShop.id,
         role: RoleType.SHOP,
         refreshToken: tokens.refetchToken,
@@ -83,6 +84,7 @@ export class ShopService {
       userId: foundShop.id,
     });
     const publicKeyString = await this.authService.createKeyToken({
+      privateKey,
       publicKey,
       userId: foundShop.id,
       role: RoleType.SHOP,

@@ -24,7 +24,10 @@ import { ShopRegisterDto } from 'modules/auth/dto/register.dto';
 import { ShopService } from 'modules/shop/shop.service';
 import { ShopDto } from 'modules/shop/dto/shop.dto';
 import { ShopLoginDto } from 'modules/auth/dto/login.dto';
-import { TokenPayloadDto } from 'modules/auth/dto/token-payload.dto';
+import {
+  RefreshTokenDTO,
+  TokenPayloadDto,
+} from 'modules/auth/dto/token-payload.dto';
 import { AuthGuard } from 'guards/auth.guard';
 
 @ApiBearerAuth()
@@ -60,6 +63,20 @@ export class AuthController {
     tokens: TokenPayloadDto;
   }> {
     return await this.shopService.login(userLoginDto);
+  }
+
+  @Post('refresh-token')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @ApiOkResponse({
+    type: ShopLoginDto,
+    description: 'User info with access token',
+  })
+  async refreshToken(
+    @Req() request: Request & { keyStore: string },
+    @Body() refreshToken: RefreshTokenDTO,
+  ): Promise<TokenPayloadDto | undefined> {
+    return await this.authService.handleRefreshToken(request, refreshToken);
   }
 
   @Post('logout')

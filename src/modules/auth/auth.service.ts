@@ -1,16 +1,21 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import { InjectRepository } from '@nestjs/typeorm';
+import { KeyEntity } from 'modules/auth/key.entity';
+import { Repository } from 'typeorm';
 import type { RoleType } from '../../constant';
 import { TokenType } from '../../constant';
 import { ApiConfigService } from '../../shared/services/api-config.service';
-import type { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
-import { TokenPayloadDto } from './dto/token-payload.dto';
-import type { UserLoginDto } from './dto/user-login.dto';
-import { Repository } from 'typeorm';
-import { KeyEntity } from 'modules/auth/key.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { RefreshTokenDTO, TokenPayloadDto } from './dto/token-payload.dto';
+import { QueryBus } from '@nestjs/cqrs';
+import { CheckKeyUsedQuery } from 'modules/auth/queries/check-token-used';
 
 @Injectable()
 export class AuthService {
@@ -20,15 +25,17 @@ export class AuthService {
     private userService: UserService,
     @InjectRepository(KeyEntity)
     private keyRepository: Repository<KeyEntity>,
+    private readonly queryBus: QueryBus,
   ) {}
 
   async createKeyToken(data: {
+    privateKey: string;
     publicKey: string;
     userId: Uuid;
     role: RoleType;
     refreshToken: string;
   }): Promise<string | null> {
-    const { publicKey, userId, role, refreshToken } = data;
+    const { privateKey, publicKey, userId, role, refreshToken } = data;
     // const publicKeySting = publicKey.toString();
     // const token = await this.keyRepository.save({
     //   ownerId: userId,
@@ -37,8 +44,16 @@ export class AuthService {
     // });
     // return token ? publicKeySting : null;
 
+    const existingKey = await this.keyRepository.findOne({
+      where: { ownerId: userId },
+    });
+    if (existingKey) {
+      await this.keyRepository.delete(existingKey.id);
+    }
+
     const token = await this.keyRepository.save({
       ownerId: userId,
+      privateKey,
       publicKey,
       role: role,
       refreshToken,
@@ -87,6 +102,64 @@ export class AuthService {
     });
   }
 
+  async handleRefreshToken(
+    req: Request & { keyStore: string },
+    refetchToken: RefreshTokenDTO,
+  ): Promise<TokenPayloadDto | undefined> {
+    const { refetchToken: inputRefetchToken } = refetchToken;
+    try {
+      //   check if token used
+      const { keyStore } = req;
+      const checkTokenUsed = new CheckKeyUsedQuery(inputRefetchToken, keyStore);
+      const isTokenFound = await this.queryBus.execute(checkTokenUsed);
+      console.log('🐉 ~ AuthService ~ foundToken ~ 🚀\n', isTokenFound);
+
+      if (isTokenFound) {
+        await this.keyRepository.delete({ id: keyStore as Uuid });
+        throw new ForbiddenException(
+          'Something wrong happen!! please re-login',
+        );
+      }
+      const holderToken = await this.keyRepository.findOneBy({
+        refreshToken: inputRefetchToken,
+      });
+      if (!holderToken)
+        throw new NotFoundException('Something wrong happen!! please re-login');
+
+      const { userId } = await this.jwtService.verifyAsync(inputRefetchToken, {
+        publicKey: holderToken.publicKey,
+      });
+      if (!userId) throw new NotFoundException('token refresh invalid!!');
+
+      const newToken = await this.createTokenPair({
+        privateKey: holderToken.privateKey,
+        publicKey: holderToken.publicKey,
+        role: holderToken.role,
+        userId: holderToken.ownerId,
+      });
+      console.log(
+        '🐉 ~ AuthService ~ handleRefreshToken ~ newToken ~ 🚀\n',
+        newToken,
+      );
+
+      const updatedToken = await this.keyRepository.update(
+        { id: holderToken.id },
+        {
+          refreshToken: newToken.refetchToken,
+          refreshTokenUsed: [
+            ...holderToken.refreshTokenUsed,
+            inputRefetchToken,
+          ],
+        },
+      );
+      if (updatedToken.affected && updatedToken.affected > 0) {
+        return newToken;
+      }
+    } catch (error: any) {
+      throw new BadRequestException(error.message || 'refresh token failed!!');
+    }
+  }
+
   async logout(req: Request & { keyStore: string }) {
     const { keyStore } = req;
     if (!keyStore) {
@@ -107,7 +180,7 @@ export class AuthService {
       where: { ownerId: clientId },
     });
     if (!foundKey) {
-      throw new NotFoundException('Not found keyStore');
+      throw new NotFoundException('Something wrong happen!! please re-login');
     }
     const { publicKey } = foundKey;
     const keyVerified = await this.jwtService.verifyAsync(accessToken, {
