@@ -29,6 +29,7 @@ import {
   TokenPayloadDto,
 } from 'modules/auth/dto/token-payload.dto';
 import { AuthGuard } from 'guards/auth.guard';
+import { KeyEntity } from 'modules/auth/key.entity';
 
 @ApiBearerAuth()
 @Controller('auth')
@@ -73,7 +74,7 @@ export class AuthController {
     description: 'User info with access token',
   })
   async refreshToken(
-    @Req() request: Request & { keyStore: string },
+    @Req() request: Request & { keyRecord: KeyEntity },
     @Body() refreshToken: RefreshTokenDTO,
   ): Promise<TokenPayloadDto | undefined> {
     return await this.authService.handleRefreshToken(request, refreshToken);

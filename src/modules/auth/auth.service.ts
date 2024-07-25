@@ -103,21 +103,22 @@ export class AuthService {
   }
 
   async handleRefreshToken(
-    req: Request & { keyStore: string },
+    req: Request & { keyRecord: KeyEntity },
     refetchToken: RefreshTokenDTO,
   ): Promise<TokenPayloadDto | undefined> {
     const { refetchToken: inputRefetchToken } = refetchToken;
     try {
       //   check if token used
-      const { keyStore } = req;
-      const checkTokenUsed = new CheckKeyUsedQuery(inputRefetchToken, keyStore);
+      const { keyRecord } = req;
+      const checkTokenUsed = new CheckKeyUsedQuery(
+        inputRefetchToken,
+        keyRecord,
+      );
       const isTokenFound = await this.queryBus.execute(checkTokenUsed);
-      console.log('🐉 ~ AuthService ~ foundToken ~ 🚀\n', isTokenFound);
-
       if (isTokenFound) {
-        await this.keyRepository.delete({ id: keyStore as Uuid });
+        await this.keyRepository.delete({ id: keyRecord.id as Uuid });
         throw new ForbiddenException(
-          'Something wrong happen!! please re-login',
+          'Something wrong happen!! please re-login => xoa key',
         );
       }
       const holderToken = await this.keyRepository.findOneBy({
@@ -137,10 +138,6 @@ export class AuthService {
         role: holderToken.role,
         userId: holderToken.ownerId,
       });
-      console.log(
-        '🐉 ~ AuthService ~ handleRefreshToken ~ newToken ~ 🚀\n',
-        newToken,
-      );
 
       const updatedToken = await this.keyRepository.update(
         { id: holderToken.id },
@@ -170,7 +167,7 @@ export class AuthService {
   }
 
   async validateToken(
-    accessToken: string,
+    token: string,
     clientId: Uuid,
   ): Promise<{
     keyVerified: any;
@@ -183,7 +180,7 @@ export class AuthService {
       throw new NotFoundException('Something wrong happen!! please re-login');
     }
     const { publicKey } = foundKey;
-    const keyVerified = await this.jwtService.verifyAsync(accessToken, {
+    const keyVerified = await this.jwtService.verifyAsync(token, {
       publicKey: publicKey,
     });
     return { keyVerified, foundKey };

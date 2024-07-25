@@ -33,6 +33,7 @@ export class QueryFailedFilter implements ExceptionFilter<QueryFailedError> {
         : exception.message,
       timestamp: new Date().toISOString(),
       path: request.url,
+      stack: exception.stack,
     });
   }
 }

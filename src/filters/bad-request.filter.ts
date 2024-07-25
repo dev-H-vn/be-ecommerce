@@ -27,8 +27,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     this.logger.debug('===TRIGGER GLOBAL FILTER===');
     console.log('bad request exception');
 
-    response
-      .status(statusCode)
-      .json({ ...r, timestamp: new Date().toISOString(), path: request.url });
+    response.status(statusCode).json({
+      ...r,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      stack: exception.stack,
+    });
   }
 }

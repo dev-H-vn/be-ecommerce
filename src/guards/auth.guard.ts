@@ -31,19 +31,36 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
       const request = context.switchToHttp().getRequest();
-      const { authorization }: any = request.headers;
       const clientId = request.headers['client-id'];
-
       if (!clientId || clientId.trim() === '') {
         throw new UnauthorizedException('Please provide client-id');
       }
+
+      const refetchToken = request?.body?.refetchToken;
+      if (refetchToken && request?.url) {
+        console.log(
+          '🐉 ~ AuthGuard ~ canActivate ~ request?.url ~ 🚀\n',
+          request?.url,
+          refetchToken,
+        );
+        const { foundKey } = await this.authService.validateToken(
+          refetchToken,
+          clientId,
+        );
+        if (foundKey.id) {
+          request.keyStore = foundKey.id;
+          request.keyRecord = foundKey;
+        }
+        return true;
+      }
+
+      const { authorization }: any = request.headers;
       if (!authorization || authorization.trim() === '') {
         throw new UnauthorizedException('Please provide token');
       }
-      const authToken = authorization.replace(/Bearer/gim, '').trim();
-
+      const bearerAuthToken = authorization.replace(/Bearer/gim, '').trim();
       const { foundKey } = await this.authService.validateToken(
-        authToken,
+        bearerAuthToken,
         clientId,
       );
       if (foundKey.id) {
