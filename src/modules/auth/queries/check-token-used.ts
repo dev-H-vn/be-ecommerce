@@ -12,7 +12,7 @@ export class CheckKeyUsedQuery implements ICommand {
 
 @QueryHandler(CheckKeyUsedQuery)
 export class CheckTokenHandler implements IQueryHandler<CheckKeyUsedQuery> {
-  constructor() {} // private keyEntity: Repository<KeyEntity>, // @InjectRepository(KeyEntity)
+  constructor() {} // private keyEntityRepository: Repository<KeyEntity>, // @InjectRepository(KeyEntity)
 
   async execute(refreshTokenQuery: CheckKeyUsedQuery) {
     const { refreshToken, keyRecord } = refreshTokenQuery;
