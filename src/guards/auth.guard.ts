@@ -50,6 +50,7 @@ export class AuthGuard implements CanActivate {
         if (foundKey.id) {
           request.keyStore = foundKey.id;
           request.keyRecord = foundKey;
+          request.clientId = clientId;
         }
         return true;
       }
@@ -65,6 +66,8 @@ export class AuthGuard implements CanActivate {
       );
       if (foundKey.id) {
         request.keyStore = foundKey.id;
+        request.keyRecord = foundKey;
+        request.clientId = clientId;
       }
 
       return true;

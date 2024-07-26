@@ -74,7 +74,7 @@ export class AuthController {
     description: 'User info with access token',
   })
   async refreshToken(
-    @Req() request: Request & { keyRecord: KeyEntity },
+    @Req() request: RequestType,
     @Body() refreshToken: RefreshTokenDTO,
   ): Promise<TokenPayloadDto | undefined> {
     return await this.authService.handleRefreshToken(request, refreshToken);

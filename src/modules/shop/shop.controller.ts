@@ -17,15 +17,15 @@ import { ApiTags } from '@nestjs/swagger';
 export class ShopController {
   constructor(private readonly shopService: ShopService) {}
 
-  @Post('/register')
-  create(@Body() createShopDto: ShopRegisterDto) {
-    return this.shopService.register(createShopDto);
-  }
+  //   @Post('/register')
+  //   create(@Body() createShopDto: ShopRegisterDto) {
+  //     return this.shopService.register(createShopDto);
+  //   }
 
-  @Post('/login')
-  login(@Body() loginShopDto: ShopLoginDto) {
-    return this.shopService.login(loginShopDto);
-  }
+  //   @Post('/login')
+  //   login(@Body() loginShopDto: ShopLoginDto) {
+  //     return this.shopService.login(loginShopDto);
+  //   }
 
   @Get()
   findAll() {

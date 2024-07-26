@@ -103,7 +103,7 @@ export class AuthService {
   }
 
   async handleRefreshToken(
-    req: Request & { keyRecord: KeyEntity },
+    req: RequestType,
     refetchToken: RefreshTokenDTO,
   ): Promise<TokenPayloadDto | undefined> {
     const { refetchToken: inputRefetchToken } = refetchToken;

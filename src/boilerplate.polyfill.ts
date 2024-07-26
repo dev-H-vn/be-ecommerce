@@ -12,11 +12,18 @@ import { PageMetaDto } from './common/dto/page-meta.dto';
 import type { PageOptionsDto } from './common/dto/page-options.dto';
 import type { LanguageCode } from './constant/language-code';
 import type { KeyOfType } from './types';
+import { KeyEntity } from 'modules/auth/key.entity';
 
 declare global {
   export type Uuid = string & { _uuidBrand: undefined };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-redundant-type-constituents
   export type Todo = any & { _todoBrand: undefined };
+
+  export type RequestType = Request & {
+    keyRecord: KeyEntity;
+    keyStore: Uuid;
+    clientId: Uuid;
+  };
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   interface Array<T> {

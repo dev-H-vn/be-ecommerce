@@ -12,6 +12,7 @@ import {
   IsEmail,
   IsEnum,
   IsInt,
+  IsNotEmpty,
   IsNumber,
   IsPositive,
   IsString,
@@ -78,7 +79,12 @@ export function NumberField(
   if (options.nullable) {
     decorators.push(IsNullable({ each: options.each }));
   } else {
-    decorators.push(NotEquals(null, { each: options.each }));
+    decorators.push(
+      ...[
+        NotEquals(null, { each: options.each }),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   if (options.swagger !== false) {
@@ -128,7 +134,12 @@ export function StringField(
   if (options.nullable) {
     decorators.push(IsNullable({ each: options.each }));
   } else {
-    decorators.push(NotEquals(null, { each: options.each }));
+    decorators.push(
+      ...[
+        NotEquals(null, { each: options.each }),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   if (options.swagger !== false) {
@@ -139,10 +150,20 @@ export function StringField(
 
   const minLength = options.minLength || 1;
 
-  decorators.push(MinLength(minLength, { each: options.each }));
+  decorators.push(
+    MinLength(minLength, {
+      message: `Field must have at least ${options.minLength} characters`,
+      each: options.each,
+    }),
+  );
 
   if (options.maxLength) {
-    decorators.push(MaxLength(options.maxLength, { each: options.each }));
+    decorators.push(
+      MaxLength(options.maxLength, {
+        message: `Field must have maximum ${options.maxLength} characters`,
+        each: options.each,
+      }),
+    );
   }
 
   if (options.toLowerCase) {
@@ -175,7 +196,12 @@ export function PasswordField(
   if (options.nullable) {
     decorators.push(IsNullable());
   } else {
-    decorators.push(NotEquals(null));
+    decorators.push(
+      ...[
+        NotEquals(null),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   return applyDecorators(...decorators);
@@ -199,7 +225,12 @@ export function BooleanField(
   if (options.nullable) {
     decorators.push(IsNullable());
   } else {
-    decorators.push(NotEquals(null));
+    decorators.push(
+      ...[
+        NotEquals(null),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   if (options.swagger !== false) {
@@ -235,7 +266,12 @@ export function TranslationsField(
   if (options.nullable) {
     decorators.push(IsNullable());
   } else {
-    decorators.push(NotEquals(null));
+    decorators.push(
+      ...[
+        NotEquals(null),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   if (options.swagger !== false) {
@@ -266,7 +302,12 @@ export function TmpKeyField(
   if (options.nullable) {
     decorators.push(IsNullable());
   } else {
-    decorators.push(NotEquals(null));
+    decorators.push(
+      ...[
+        NotEquals(null),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   if (options.swagger !== false) {
@@ -301,7 +342,12 @@ export function EnumField<TEnum extends object>(
   if (options.nullable) {
     decorators.push(IsNullable());
   } else {
-    decorators.push(NotEquals(null));
+    decorators.push(
+      ...[
+        NotEquals(null),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   if (options.each) {
@@ -337,7 +383,12 @@ export function ClassField<TClass extends Constructor>(
   if (options.nullable) {
     decorators.push(IsNullable());
   } else {
-    decorators.push(NotEquals(null));
+    decorators.push(
+      ...[
+        NotEquals(null),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   if (options.swagger !== false) {
@@ -391,7 +442,12 @@ export function EmailField(
   if (options.nullable) {
     decorators.push(IsNullable());
   } else {
-    decorators.push(NotEquals(null));
+    decorators.push(
+      ...[
+        NotEquals(null),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   if (options.swagger !== false) {
@@ -418,7 +474,12 @@ export function PhoneField(
   if (options.nullable) {
     decorators.push(IsNullable());
   } else {
-    decorators.push(NotEquals(null));
+    decorators.push(
+      ...[
+        NotEquals(null),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   if (options.swagger !== false) {
@@ -446,7 +507,12 @@ export function UUIDField(
   if (options.nullable) {
     decorators.push(IsNullable());
   } else {
-    decorators.push(NotEquals(null));
+    decorators.push(
+      ...[
+        NotEquals(null),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   if (options.swagger !== false) {
@@ -478,7 +544,12 @@ export function URLField(
   if (options.nullable) {
     decorators.push(IsNullable({ each: options.each }));
   } else {
-    decorators.push(NotEquals(null, { each: options.each }));
+    decorators.push(
+      ...[
+        NotEquals(null, { each: options.each }),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   return applyDecorators(...decorators);
@@ -501,7 +572,12 @@ export function DateField(
   if (options.nullable) {
     decorators.push(IsNullable());
   } else {
-    decorators.push(NotEquals(null));
+    decorators.push(
+      ...[
+        NotEquals(null),
+        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+      ],
+    );
   }
 
   if (options.swagger !== false) {

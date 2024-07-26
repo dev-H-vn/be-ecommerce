@@ -6,18 +6,35 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'guards/auth.guard';
 
 @Controller('product')
+@ApiBearerAuth()
+@ApiTags('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  create(
+    @Req() request: RequestType,
+    @Body() createProductDto: CreateProductDto,
+  ) {
+    console.log(
+      '🐉 ~ ProductController ~ createProductDto ~ 🚀\n',
+      createProductDto,
+    );
+    return this.productService.create(request, createProductDto);
   }
 
   @Get()

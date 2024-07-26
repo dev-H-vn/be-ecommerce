@@ -1,4 +1,6 @@
 import { AbstractEntity } from 'common/abstract.entity';
+import { ClothesEntity } from 'product/entities/clothing.entity';
+import { ElectronicEntity } from 'product/entities/electronic.entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity({ name: 'products' })
@@ -24,6 +26,6 @@ export class ProductEntity extends AbstractEntity {
   @Column({ type: 'varchar' })
   productType!: string;
 
-  @Column({ type: 'varchar' })
-  productAttributes!: any;
+  @Column('json')
+  productAttributes!: Record<string, any>;
 }
