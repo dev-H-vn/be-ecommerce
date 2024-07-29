@@ -1,6 +1,6 @@
 import { AbstractEntity } from 'common/abstract.entity';
-import { ClothesEntity } from 'product/entities/clothing.entity';
-import { ElectronicEntity } from 'product/entities/electronic.entity';
+import { ClothesEntity } from 'modules/product/entities/clothing.entity';
+import { ElectronicEntity } from 'modules/product/entities/electronic.entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity({ name: 'products' })

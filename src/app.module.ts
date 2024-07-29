@@ -17,7 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { ShopModule } from 'modules/shop/shop.module';
-import { ProductModule } from './product/product.module';
+import { ProductModule } from './modules/product/product.module';
 
 @Module({
   imports: [

@@ -37,7 +37,7 @@ export class AuthGuard implements CanActivate {
       }
 
       const refetchToken = request?.body?.refetchToken;
-      if (refetchToken && request?.url) {
+      if (refetchToken && request?.url === '/auth/refresh-token') {
         console.log(
           '🐉 ~ AuthGuard ~ canActivate ~ request?.url ~ 🚀\n',
           request?.url,

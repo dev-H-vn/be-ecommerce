@@ -12,7 +12,7 @@ export class KeyEntity extends AbstractEntity {
 
   //   @OneToOne(() => ShopEntity, (ShopEntity) => ShopEntity.id)
   //   @JoinColumn({ name: 'owner', referencedColumnName: 'id' })
-  //   owner!: ShopEntity | UserEntity;
+  //   owner!: ShopEntity | UserEntity`;
 
   @Column({ type: 'varchar' })
   privateKey!: string;

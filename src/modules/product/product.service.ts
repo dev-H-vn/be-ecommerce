@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateProductCommand } from 'product/commands/create-product.command';
+import { CreateProductCommand } from 'modules/product/commands/create-product.command';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProductEntity } from 'product/entities/product.entity';
+import { ProductEntity } from 'modules/product/entities/product.entity';
 import { Repository } from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
 

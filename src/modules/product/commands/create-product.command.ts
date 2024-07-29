@@ -3,9 +3,9 @@ import type { ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { CommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProductEntity } from 'product/entities/product.entity';
-import { ClothesEntity } from 'product/entities/clothing.entity';
-import { ElectronicEntity } from 'product/entities/electronic.entity';
+import { ProductEntity } from 'modules/product/entities/product.entity';
+import { ClothesEntity } from 'modules/product/entities/clothing.entity';
+import { ElectronicEntity } from 'modules/product/entities/electronic.entity';
 
 export class CreateProductCommand implements ICommand {
   constructor(

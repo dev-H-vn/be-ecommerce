@@ -83,7 +83,7 @@ export class AuthService {
         type: TokenType.REFRESH_TOKEN,
         role: data.role,
       },
-      { expiresIn: '2d', privateKey: data.privateKey },
+      { expiresIn: '7d', privateKey: data.privateKey },
     );
 
     // const verifyKey = await this.jwtService.verifyAsync(accessToken.trim(), {
