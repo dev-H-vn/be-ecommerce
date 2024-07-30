@@ -6,14 +6,12 @@ import { Repository } from 'typeorm';
 import { ProductEntity } from 'modules/product/entities/product.entity';
 import { ClothesEntity } from 'modules/product/entities/clothing.entity';
 import { ElectronicEntity } from 'modules/product/entities/electronic.entity';
+import { CreateProductDto } from 'modules/product/dto/create-product.dto';
 
 export class CreateProductCommand implements ICommand {
   constructor(
     public readonly type: string,
-    public readonly product: Omit<
-      ProductEntity,
-      'id' | 'createdAt' | 'updatedAt' | 'toDto'
-    >,
+    public readonly product: CreateProductDto,
   ) {}
 }
 
@@ -53,14 +51,11 @@ export class CreateProductHandler
 }
 
 class Product {
-  protected product: Omit<
-    ProductEntity,
-    'id' | 'createdAt' | 'updatedAt' | 'toDto'
-  >;
+  protected product: CreateProductDto;
   protected productRepository: Repository<ProductEntity>;
 
   constructor(
-    product: Omit<ProductEntity, 'id' | 'createdAt' | 'updatedAt' | 'toDto'>,
+    product: CreateProductDto,
     productRepository: Repository<ProductEntity>,
   ) {
     this.product = product;
@@ -76,7 +71,7 @@ class Clothes extends Product {
   private clothesRepository: Repository<ClothesEntity>;
 
   constructor(
-    product: Omit<ProductEntity, 'id' | 'createdAt' | 'updatedAt' | 'toDto'>,
+    product: CreateProductDto,
     productRepository: Repository<ProductEntity>,
     clothesRepository: Repository<ClothesEntity>,
   ) {
@@ -95,7 +90,7 @@ class Electronic extends Product {
   private electroRepository: Repository<ElectronicEntity>;
 
   constructor(
-    product: Omit<ProductEntity, 'id' | 'createdAt' | 'updatedAt' | 'toDto'>,
+    product: CreateProductDto,
     productRepository: Repository<ProductEntity>,
     electroRepository: Repository<ElectronicEntity>,
   ) {

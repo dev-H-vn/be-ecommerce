@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
-import { IsObject, ValidateNested } from 'class-validator';
+import { IsArray, IsObject, ValidateNested } from 'class-validator';
 import {
+  BooleanField,
   NumberField,
   NumberFieldOptional,
   StringField,
@@ -21,6 +22,18 @@ export class CreateProductDto {
 
   @StringField()
   productThumb!: string;
+
+  @NumberField({ min: 1, max: 5, default: 1 })
+  productAverage!: number;
+
+  @IsArray()
+  productVariations!: any[]; // You might want to use a more specific type instead of `any`
+
+  @BooleanField()
+  isDraft!: boolean;
+
+  @BooleanField()
+  isPublish!: boolean;
 
   @StringField()
   productDescription!: string;
