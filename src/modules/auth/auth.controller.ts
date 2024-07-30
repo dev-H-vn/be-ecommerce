@@ -87,7 +87,7 @@ export class AuthController {
     type: ShopLoginDto,
     description: 'User info with access token',
   })
-  async logout(@Req() request: Request & { keyStore: string }): Promise<any> {
+  async logout(@Req() request: RequestType): Promise<any> {
     return await this.authService.logout(request);
   }
 

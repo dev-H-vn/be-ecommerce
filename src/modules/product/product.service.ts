@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateProductCommand } from 'modules/product/commands/create-product.command';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from 'modules/product/entities/product.entity';
 import { Repository } from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
+import { UsersPageOptionsDto } from 'modules/user/dtos/users-page-options.dto';
+import { GetProductQuery } from 'modules/product/queries/get-product';
+import { PageDto } from 'common/dto/page.dto';
 
 @Injectable()
 export class ProductService {
@@ -14,6 +17,7 @@ export class ProductService {
     @InjectRepository(ProductEntity)
     private productRepository: Repository<ProductEntity>,
     private commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
   ) {}
 
   async create(req: RequestType, createProductDto: CreateProductDto) {
@@ -28,18 +32,23 @@ export class ProductService {
         productOwner: req.clientId,
       },
     };
-    console.log('🐉 ~ ProductService ~ create ~ data ~ 🚀\n', data);
 
     const type = 'Electronic';
     const resp = await this.commandBus.execute<CreateProductCommand>(
       new CreateProductCommand(type, data),
     );
-
     return resp;
   }
 
-  findAll() {
-    return `This action returns all product`;
+  async findAllProductOfTheShop(
+    req: RequestType,
+    pageOptionsDto: UsersPageOptionsDto,
+  ): Promise<PageDto<ProductEntity>> {
+    const { clientId } = req;
+
+    const getProductQuery = new GetProductQuery(pageOptionsDto, clientId);
+    const resp = await this.queryBus.execute(getProductQuery);
+    return resp;
   }
 
   findOne(id: number) {

@@ -18,11 +18,11 @@ export class ProductEntity extends AbstractEntity {
 
   @Column({ type: 'varchar', default: '' })
   productSlug!: string;
+
   @BeforeInsert()
   @BeforeUpdate()
   validateData() {
-    console.log('validateData called=========', this.productName); // Debugging statement
-
+    console.log('validateData called========='); // Debugging statement
     if (this.productName)
       this.productSlug = slugify(this.productName, { lower: true });
   }

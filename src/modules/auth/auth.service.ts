@@ -157,7 +157,7 @@ export class AuthService {
     }
   }
 
-  async logout(req: Request & { keyStore: string }) {
+  async logout(req: RequestType) {
     const { keyStore } = req;
     if (!keyStore) {
       throw new NotFoundException('Not found keyStore');

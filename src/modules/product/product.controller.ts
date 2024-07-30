@@ -10,12 +10,17 @@ import {
   HttpStatus,
   UseGuards,
   Req,
+  Query,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'guards/auth.guard';
+import { ProductPageOptionsDto } from 'modules/user/dtos/users-page-options.dto';
+import { PageDto } from 'common/dto/page.dto';
+import { ProductEntity } from 'modules/product/entities/product.entity';
 
 @Controller('product')
 @ApiBearerAuth()
@@ -37,14 +42,15 @@ export class ProductController {
     return this.productService.create(request, createProductDto);
   }
 
-  @Get()
-  findAll() {
-    return this.productService.findAll();
-  }
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  findAllProductOfTheShop(
+    @Req() request: RequestType,
+    @Query(new ValidationPipe({ transform: true }))
+    pageOptionsDto: ProductPageOptionsDto,
+  ): Promise<PageDto<ProductEntity>> {
+    return this.productService.findAllProductOfTheShop(request, pageOptionsDto);
   }
 
   @Patch(':id')

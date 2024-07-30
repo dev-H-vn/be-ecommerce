@@ -69,13 +69,10 @@ export class UserService {
     return user;
   }
 
-  async getUsers(
-    pageOptionsDto: UsersPageOptionsDto,
-  ): Promise<PageDto<UserDto>> {
-    const queryBuilder = this.userRepository.createQueryBuilder('user');
-    const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
-
-    return items.toPageDto(pageMetaDto);
+  async getUsers(pageOptionsDto: UsersPageOptionsDto): Promise<any> {
+    // const queryBuilder = this.userRepository.createQueryBuilder('user');
+    // const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
+    // return items.toPageDto(pageMetaDto);
   }
 
   async getUser(userId: Uuid): Promise<UserDto> {

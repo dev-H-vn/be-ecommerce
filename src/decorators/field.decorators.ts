@@ -400,10 +400,6 @@ export function ClassField<TClass extends Constructor>(
     );
   }
 
-  // if (options.each) {
-  //   decorators.push(ToArray());
-  // }
-
   return applyDecorators(...decorators);
 }
 

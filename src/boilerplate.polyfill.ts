@@ -36,7 +36,7 @@ declare global {
 
     toPageDto<Dto extends AbstractDto>(
       this: T[],
-      pageMetaDto: PageMetaDto,
+      count: number,
       // FIXME make option type visible from entity
       options?: unknown,
     ): PageDto<Dto>;
@@ -121,11 +121,8 @@ Array.prototype.getByLanguage = function (languageCode: LanguageCode): string {
     .text;
 };
 
-Array.prototype.toPageDto = function (
-  pageMetaDto: PageMetaDto,
-  options?: unknown,
-) {
-  return new PageDto(this.toDtos(options), pageMetaDto);
+Array.prototype.toPageDto = function (count: number, options?: unknown) {
+  return new PageDto(this.toDtos(options), count);
 };
 
 SelectQueryBuilder.prototype.searchByString = function (

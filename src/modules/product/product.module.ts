@@ -6,9 +6,10 @@ import { ClothesEntity } from 'modules/product/entities/clothing.entity';
 import { ElectronicEntity } from 'modules/product/entities/electronic.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CreateProductHandler } from 'modules/product/commands/create-product.command';
+import { GetProductHandler } from 'modules/product/queries/get-product';
 
 const productEntity = [ProductEntity, ClothesEntity, ElectronicEntity];
-const handlers = [CreateProductHandler];
+const handlers = [CreateProductHandler, GetProductHandler];
 
 @Module({
   imports: [TypeOrmModule.forFeature(productEntity)],
