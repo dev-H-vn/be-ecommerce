@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import type { ICommand, IQueryHandler } from '@nestjs/cqrs';
 import { QueryHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,10 +23,25 @@ export class GetProductHandler implements IQueryHandler<GetProductQuery> {
 
   async execute(params: GetProductQuery): Promise<PageDto<ProductEntity>> {
     const { clientId, pageOptionsDto } = params;
-    const { order, page, skip, take, q } = pageOptionsDto;
+    console.log(
+      '🐉 ~ GetProductHandler ~ execute ~ pageOptionsDto ~ 🚀\n',
+      pageOptionsDto,
+    );
+    const { order, page, skip, take, q, isDrafted, isPublished } =
+      pageOptionsDto;
+
+    if (isDrafted && isPublished) {
+      throw new BadRequestException(
+        'request is failed, no product is isDraft and isPublished',
+      );
+    }
 
     const [data, count] = await this.postRepository.findAndCount({
       //   where: q ? { productName: Like(`%${q}%`) } : {},
+      where: {
+        ...(isPublished && { isDraft: false, isPublish: true }),
+        ...(isDrafted && { isDraft: true, isPublish: false }),
+      },
       order: {
         createdAt: order,
       },
@@ -34,9 +49,8 @@ export class GetProductHandler implements IQueryHandler<GetProductQuery> {
       take,
     });
     console.log(
-      '🐉 ~ GetProductHandler ~ execute ~ clientId ~ 🚀\n',
-      count,
-      data,
+      '🐉 ~ GetProductHandler ~ execute ~ data-length ~ 🚀\n',
+      data.length,
     );
     return { data: data, count: count };
   }

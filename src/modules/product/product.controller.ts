@@ -53,12 +53,29 @@ export class ProductController {
     return this.productService.findAllProductOfTheShop(request, pageOptionsDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  @Patch('/publish/:id')
+  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(AuthGuard)
+  publishProductByShop(
+    @Req() request: RequestType,
+    @Param('id') id: Uuid,
+  ): Promise<string | undefined> {
+    return this.productService.publishProductByShop(request, id);
+  }
+
+  @Patch('/draft/:id')
+  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(AuthGuard)
+  draftProductByShop(
+    @Req() request: RequestType,
+    @Param('id') id: Uuid,
+  ): Promise<string | undefined> {
+    return this.productService.draftProductByShop(request, id);
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.productService.remove(+id);
   }
