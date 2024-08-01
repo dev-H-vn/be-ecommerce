@@ -42,6 +42,20 @@ export class ProductController {
     return this.productService.create(request, createProductDto);
   }
 
+  @Post()
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  update(
+    @Req() request: RequestType,
+    @Body() createProductDto: UpdateProductDto,
+  ) {
+    console.log(
+      '🐉 ~ ProductController ~ createProductDto ~ 🚀\n',
+      createProductDto,
+    );
+    return this.productService.update(request, createProductDto);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)

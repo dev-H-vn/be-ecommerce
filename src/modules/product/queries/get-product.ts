@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PageDto } from 'common/dto/page.dto';
 import { ProductEntity } from 'modules/product/entities/product.entity';
 import { ProductPageOptionsDto } from 'modules/user/dtos/users-page-options.dto';
-import { Like, Repository } from 'typeorm';
+import { ILike, Like, Repository } from 'typeorm';
 
 export class GetProductQuery implements ICommand {
   constructor(
@@ -37,8 +37,9 @@ export class GetProductHandler implements IQueryHandler<GetProductQuery> {
     }
 
     const [data, count] = await this.postRepository.findAndCount({
-      //   where: q ? { productName: Like(`%${q}%`) } : {},
       where: {
+        productOwner: clientId,
+        ...(q && { productName: ILike(`%${q}%`) }),
         ...(isPublished && { isDraft: false, isPublish: true }),
         ...(isDrafted && { isDraft: true, isPublish: false }),
       },

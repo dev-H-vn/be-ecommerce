@@ -24,7 +24,7 @@ export class ProductService {
   ) {}
 
   async create(req: RequestType, createProductDto: CreateProductDto) {
-    const id = uuidV4();
+    const id = uuidV4() as Uuid;
     const data = {
       ...createProductDto,
       id,
@@ -36,9 +36,27 @@ export class ProductService {
       },
     };
 
-    const type = 'Electronic';
     const resp = await this.commandBus.execute<CreateProductCommand>(
-      new CreateProductCommand(type, data),
+      new CreateProductCommand(data),
+    );
+    return resp;
+  }
+
+  async update(req: RequestType, createProductDto: CreateProductDto) {
+    const id = uuidV4() as Uuid;
+    const data = {
+      ...createProductDto,
+      id,
+      productOwner: req.clientId,
+      productAttributes: {
+        ...createProductDto.productAttributes,
+        id,
+        productOwner: req.clientId,
+      },
+    };
+
+    const resp = await this.commandBus.execute<CreateProductCommand>(
+      new CreateProductCommand(data),
     );
     return resp;
   }
