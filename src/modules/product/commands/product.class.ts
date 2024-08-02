@@ -48,7 +48,10 @@ export class Clothes extends Product {
   }
 
   async createProduct(): Promise<ProductEntity> {
-    await this.clothesRepository.save(this.product.productAttributes);
+    const category = await this.clothesRepository.save(
+      this.product.productAttributes,
+    );
+    if (!category) throw new BadRequestException('Category not created!');
     const newProduct = await super.createProduct();
     return newProduct;
   }
@@ -84,7 +87,10 @@ export class Electronic extends Product {
   }
 
   async createProduct(): Promise<ProductEntity> {
-    await this.electroRepository.save(this.product.productAttributes);
+    const category = await this.electroRepository.save(
+      this.product.productAttributes,
+    );
+    if (!category) throw new BadRequestException('Category not created!');
     const newProduct = await super.createProduct();
     return newProduct;
   }

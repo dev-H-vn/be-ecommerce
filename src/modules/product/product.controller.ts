@@ -28,31 +28,23 @@ import { ProductEntity } from 'modules/product/entities/product.entity';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Post()
+  @Post('/create')
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   create(
     @Req() request: RequestType,
     @Body() createProductDto: CreateProductDto,
   ) {
-    console.log(
-      '🐉 ~ ProductController ~ createProductDto ~ 🚀\n',
-      createProductDto,
-    );
     return this.productService.create(request, createProductDto);
   }
 
-  @Post()
+  @Post('/update')
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   update(
     @Req() request: RequestType,
     @Body() createProductDto: UpdateProductDto,
   ) {
-    console.log(
-      '🐉 ~ ProductController ~ createProductDto ~ 🚀\n',
-      createProductDto,
-    );
     return this.productService.update(request, createProductDto);
   }
 

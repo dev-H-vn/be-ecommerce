@@ -16,10 +16,7 @@ import { UpdateProductDto } from 'modules/product/dto/update-product.dto';
 import { Category } from 'constant';
 
 export class UpdateProductCommand implements ICommand {
-  constructor(
-    public readonly type: string,
-    public readonly product: IProduct,
-  ) {}
+  constructor(public readonly product: IProduct) {}
 }
 
 @CommandHandler(UpdateProductCommand)
@@ -36,9 +33,10 @@ export class UpdateProductHandler
   ) {}
 
   async execute(command: UpdateProductCommand): Promise<ProductEntity> {
-    const { product, type } = command;
+    const { product } = command;
+    const { productType } = product;
 
-    switch (type) {
+    switch (productType) {
       case Category.Electronic:
         return new Electronic(
           product,
@@ -52,7 +50,7 @@ export class UpdateProductHandler
           this.clothesRepository,
         ).updateProduct();
       default:
-        throw new BadRequestException(`Invalid product ${type}`);
+        throw new BadRequestException(`Invalid product ${productType}`);
     }
   }
 }

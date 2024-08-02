@@ -337,7 +337,12 @@ export function EnumField<TEnum extends object>(
 ): PropertyDecorator {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/ban-types
   const enumValue = getEnum();
-  const decorators = [IsEnum(enumValue, { each: options.each })];
+  const decorators = [
+    IsEnum(enumValue, {
+      each: options.each,
+      message: 'Value must be a valid enum value',
+    }),
+  ];
 
   if (options.nullable) {
     decorators.push(IsNullable());
@@ -345,7 +350,10 @@ export function EnumField<TEnum extends object>(
     decorators.push(
       ...[
         NotEquals(null),
-        IsNotEmpty({ message: 'Field must not be empty', each: options.each }),
+        IsNotEmpty({
+          message: 'Field must not be empty',
+          each: options.each,
+        }),
       ],
     );
   }

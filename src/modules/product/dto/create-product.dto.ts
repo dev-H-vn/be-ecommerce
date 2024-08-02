@@ -1,7 +1,9 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsObject, ValidateNested } from 'class-validator';
+import { Category } from 'constant';
 import {
   BooleanField,
+  EnumFieldOptional,
   NumberField,
   NumberFieldOptional,
   StringField,
@@ -44,8 +46,9 @@ export class CreateProductDto {
   @NumberField()
   productQuantity!: number;
 
-  @StringField()
-  productType!: string;
+  @StringFieldOptional()
+  @EnumFieldOptional(() => Category)
+  productType!: Category;
 
   @IsObject()
   @ValidateNested()

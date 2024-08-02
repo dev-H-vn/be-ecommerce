@@ -13,6 +13,7 @@ import {
 } from 'modules/user/dtos/users-page-options.dto';
 import { GetProductQuery } from 'modules/product/queries/get-product';
 import { PageDto } from 'common/dto/page.dto';
+import { UpdateProductCommand } from 'modules/product/commands/update-product.command';
 
 @Injectable()
 export class ProductService {
@@ -42,21 +43,19 @@ export class ProductService {
     return resp;
   }
 
-  async update(req: RequestType, createProductDto: CreateProductDto) {
-    const id = uuidV4() as Uuid;
+  async update(req: RequestType, updateProductDto: UpdateProductDto) {
     const data = {
-      ...createProductDto,
-      id,
+      ...updateProductDto,
       productOwner: req.clientId,
       productAttributes: {
-        ...createProductDto.productAttributes,
-        id,
+        ...updateProductDto.productAttributes,
         productOwner: req.clientId,
+        id: updateProductDto.id,
       },
     };
 
-    const resp = await this.commandBus.execute<CreateProductCommand>(
-      new CreateProductCommand(data),
+    const resp = await this.commandBus.execute<UpdateProductCommand>(
+      new UpdateProductCommand(data),
     );
     return resp;
   }
