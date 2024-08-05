@@ -2,8 +2,16 @@ import { IsNumber, Max, Min } from 'class-validator';
 import { AbstractEntity } from 'common/abstract.entity';
 import { ClothesEntity } from 'modules/product/entities/clothing.entity';
 import { ElectronicEntity } from 'modules/product/entities/electronic.entity';
+import { InventoriesEntity } from 'modules/product/entities/inventories.entity';
 import slugify from 'slugify';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+} from 'typeorm';
 
 @Entity({ name: 'products' })
 export class ProductEntity extends AbstractEntity {
@@ -45,10 +53,10 @@ export class ProductEntity extends AbstractEntity {
   @Column({ type: 'varchar' })
   productDescription!: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'numeric', default: 0 })
   productPrice!: number;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'numeric', default: 0 })
   productQuantity!: number;
 
   @Column({ type: 'varchar' })
@@ -56,4 +64,7 @@ export class ProductEntity extends AbstractEntity {
 
   @Column('json')
   productAttributes!: Record<string, any>;
+
+  @OneToOne(() => InventoriesEntity)
+  productInventory!: InventoriesEntity;
 }

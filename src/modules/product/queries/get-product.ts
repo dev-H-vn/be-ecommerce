@@ -1,9 +1,10 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, NotFoundException } from '@nestjs/common';
 import type { ICommand, IQueryHandler } from '@nestjs/cqrs';
 import { QueryHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PageDto } from 'common/dto/page.dto';
 import { ProductEntity } from 'modules/product/entities/product.entity';
+import { ProductRepositories } from 'modules/product/repositories/product.repositories';
 import { ProductPageOptionsDto } from 'modules/user/dtos/users-page-options.dto';
 import { ILike, Like, Repository } from 'typeorm';
 
@@ -17,8 +18,8 @@ export class GetProductQuery implements ICommand {
 @QueryHandler(GetProductQuery)
 export class GetProductHandler implements IQueryHandler<GetProductQuery> {
   constructor(
-    @InjectRepository(ProductEntity)
-    private postRepository: Repository<ProductEntity>,
+    @Inject('PRODUCT_REPOSITORIES')
+    private repositories: ProductRepositories,
   ) {}
 
   async execute(params: GetProductQuery): Promise<PageDto<ProductEntity>> {
@@ -36,19 +37,20 @@ export class GetProductHandler implements IQueryHandler<GetProductQuery> {
       );
     }
 
-    const [data, count] = await this.postRepository.findAndCount({
-      where: {
-        productOwner: clientId,
-        ...(q && { productName: ILike(`%${q}%`) }),
-        ...(isPublished && { isDraft: false, isPublish: true }),
-        ...(isDrafted && { isDraft: true, isPublish: false }),
-      },
-      order: {
-        createdAt: order,
-      },
-      skip: skip,
-      take,
-    });
+    const [data, count] =
+      await this.repositories.productRepository.findAndCount({
+        where: {
+          productOwner: clientId,
+          ...(q && { productName: ILike(`%${q}%`) }),
+          ...(isPublished && { isDraft: false, isPublish: true }),
+          ...(isDrafted && { isDraft: true, isPublish: false }),
+        },
+        order: {
+          createdAt: order,
+        },
+        skip: skip,
+        take,
+      });
     console.log(
       '🐉 ~ GetProductHandler ~ execute ~ data-length ~ 🚀\n',
       data.length,

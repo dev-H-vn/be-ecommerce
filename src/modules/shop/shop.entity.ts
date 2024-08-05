@@ -1,7 +1,8 @@
 import { AbstractEntity } from 'common/abstract.entity';
 import { UseDto } from 'decorators';
+import { InventoriesEntity } from 'modules/product/entities/inventories.entity';
 import { ShopDto } from 'modules/shop/dto/shop.dto';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToOne } from 'typeorm';
 
 // @UseDto(ShopDto)
 @Entity({ name: 'shops' })

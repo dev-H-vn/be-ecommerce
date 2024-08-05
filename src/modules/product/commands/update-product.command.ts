@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Inject } from '@nestjs/common';
 import type { ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { CommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,6 +14,7 @@ import {
 } from 'modules/product/commands/product.class';
 import { UpdateProductDto } from 'modules/product/dto/update-product.dto';
 import { Category } from 'constant';
+import { ProductRepositories } from 'modules/product/repositories/product.repositories';
 
 export class UpdateProductCommand implements ICommand {
   constructor(public readonly product: IProduct) {}
@@ -24,12 +25,8 @@ export class UpdateProductHandler
   implements ICommandHandler<UpdateProductCommand, ProductEntity>
 {
   constructor(
-    @InjectRepository(ProductEntity)
-    private productRepository: Repository<ProductEntity>,
-    @InjectRepository(ClothesEntity)
-    private clothesRepository: Repository<ClothesEntity>,
-    @InjectRepository(ElectronicEntity)
-    private electroRepository: Repository<ElectronicEntity>,
+    @Inject('PRODUCT_REPOSITORIES')
+    private repositories: ProductRepositories,
   ) {}
 
   async execute(command: UpdateProductCommand): Promise<ProductEntity> {
@@ -38,17 +35,9 @@ export class UpdateProductHandler
 
     switch (productType) {
       case Category.Electronic:
-        return new Electronic(
-          product,
-          this.productRepository,
-          this.electroRepository,
-        ).updateProduct();
+        return new Electronic(product, this.repositories).updateProduct();
       case Category.Clothes:
-        return new Clothes(
-          product,
-          this.productRepository,
-          this.clothesRepository,
-        ).updateProduct();
+        return new Clothes(product, this.repositories).updateProduct();
       default:
         throw new BadRequestException(`Invalid product ${productType}`);
     }

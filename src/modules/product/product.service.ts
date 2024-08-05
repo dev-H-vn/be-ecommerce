@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -14,12 +14,18 @@ import {
 import { GetProductQuery } from 'modules/product/queries/get-product';
 import { PageDto } from 'common/dto/page.dto';
 import { UpdateProductCommand } from 'modules/product/commands/update-product.command';
+import { ClothesEntity } from 'modules/product/entities/clothing.entity';
+import { ElectronicEntity } from 'modules/product/entities/electronic.entity';
 
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectRepository(ProductEntity)
-    private productRepository: Repository<ProductEntity>,
+    @Inject('PRODUCT_REPOSITORIES')
+    private repositories: {
+      productRepository: Repository<ProductEntity>;
+      clothesRepository: Repository<ClothesEntity>;
+      electroRepository: Repository<ElectronicEntity>;
+    },
     private commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
@@ -80,13 +86,15 @@ export class ProductService {
     const { clientId } = req;
     try {
       if (!id) throw new BadRequestException('ProductId must be provide!');
-      const foundProduct = await this.productRepository.findOneBy({ id });
+      const foundProduct = await this.repositories.productRepository.findOneBy({
+        id,
+      });
       if (!foundProduct) throw new BadRequestException('Product not found!');
 
       if (!foundProduct.isDraft && foundProduct.isPublish) {
         throw new BadRequestException('Product was published!');
       }
-      const resp = await this.productRepository.update(
+      const resp = await this.repositories.productRepository.update(
         { id: foundProduct.id },
         { isDraft: false, isPublish: true },
       );
@@ -103,13 +111,15 @@ export class ProductService {
     const { clientId } = req;
     try {
       if (!id) throw new BadRequestException('ProductId must be provide!');
-      const foundProduct = await this.productRepository.findOneBy({ id });
+      const foundProduct = await this.repositories.productRepository.findOneBy({
+        id,
+      });
       if (!foundProduct) throw new BadRequestException('Product not found!');
 
       if (foundProduct.isDraft && !foundProduct.isPublish) {
         throw new BadRequestException('Product was drafted!');
       }
-      const resp = await this.productRepository.update(
+      const resp = await this.repositories.productRepository.update(
         { id: foundProduct.id },
         { isDraft: true, isPublish: false },
       );

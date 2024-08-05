@@ -18,6 +18,7 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { ShopModule } from 'modules/shop/shop.module';
 import { ProductModule } from './modules/product/product.module';
+import { ProductRepositoryModule } from 'modules/product/repositories/product.repositories';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ProductModule } from './modules/product/product.module';
     UserModule,
     ShopModule,
     ProductModule,
+    // ProductRepositoryModule,
     ClsModule.forRoot({
       global: true,
       middleware: {

@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CreateProductHandler } from 'modules/product/commands/create-product.command';
 import { GetProductHandler } from 'modules/product/queries/get-product';
 import { UpdateProductHandler } from 'modules/product/commands/update-product.command';
+import { ProductRepositoryModule } from 'modules/product/repositories/product.repositories';
 
 const productEntity = [ProductEntity, ClothesEntity, ElectronicEntity];
 const handlers = [
@@ -17,7 +18,7 @@ const handlers = [
 ];
 
 @Module({
-  imports: [TypeOrmModule.forFeature(productEntity)],
+  imports: [ProductRepositoryModule.forRoot()],
   controllers: [ProductController],
   providers: [ProductService, ...handlers],
 })
