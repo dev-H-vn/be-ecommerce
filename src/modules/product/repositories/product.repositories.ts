@@ -7,6 +7,13 @@ import { ProductEntity } from 'modules/product/entities/product.entity';
 
 import { Repository } from 'typeorm';
 
+const productEntity = [
+  ProductEntity,
+  ClothesEntity,
+  ElectronicEntity,
+  InventoriesEntity,
+];
+
 export interface ProductRepositories {
   productRepository: Repository<ProductEntity>;
   clothesRepository: Repository<ClothesEntity>;
@@ -19,14 +26,7 @@ export class ProductRepositoryModule {
   static forRoot(): DynamicModule {
     return {
       module: ProductRepositoryModule,
-      imports: [
-        TypeOrmModule.forFeature([
-          ProductEntity,
-          ClothesEntity,
-          ElectronicEntity,
-          InventoriesEntity,
-        ]),
-      ],
+      imports: [TypeOrmModule.forFeature(productEntity)],
       providers: [
         {
           provide: 'PRODUCT_REPOSITORIES',

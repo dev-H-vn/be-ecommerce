@@ -1,13 +1,7 @@
 import { AbstractEntity } from 'common/abstract.entity';
 import { DiscountAppliesTo, DiscountType } from 'constant';
 import { ShopEntity } from 'modules/shop/shop.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'discounts' })
 export class DiscountsEntity extends AbstractEntity {
@@ -49,19 +43,22 @@ export class DiscountsEntity extends AbstractEntity {
   @Column({ type: 'numeric', default: 0 })
   discountMinOder!: number;
 
-  @OneToOne(() => ShopEntity)
-  discountShop!: ShopEntity;
-
   @Column('boolean', { default: false })
-  disCountActive!: boolean;
+  discountActive!: boolean;
 
   @Column({
     type: 'enum',
     enum: DiscountAppliesTo,
     default: DiscountAppliesTo.ALL,
   })
-  disCountAppliesTo!: string;
+  discountAppliesTo!: string;
+
+  //   @OneToOne(() => ShopEntity)
+  //   discountShop!: ShopEntity;
+
+  @Column('uuid')
+  discountShopId!: Uuid;
 
   @Column('uuid', { array: true, default: () => 'array[]::uuid[]' })
-  disCountAppliesToIds!: Uuid[];
+  discountAppliesToIds!: Uuid[]; //applies to products
 }

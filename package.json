@@ -10,7 +10,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "migration:generate": "yarn run typeorm -d ormconfig.ts migration:generate",
+    "migration:generate": "cd src/database/migrations && yarn run typeorm -d ormconfig.ts migration:generate",
     "migration:create": "yarn run typeorm -- migration:create",
     "migration:run": "yarn run typeorm -d ormconfig.ts migration:run",
     "migration:revert": "yarn run typeorm -d ormconfig.ts migration:revert",

@@ -10,7 +10,6 @@ import { GetProductHandler } from 'modules/product/queries/get-product';
 import { UpdateProductHandler } from 'modules/product/commands/update-product.command';
 import { ProductRepositoryModule } from 'modules/product/repositories/product.repositories';
 
-const productEntity = [ProductEntity, ClothesEntity, ElectronicEntity];
 const handlers = [
   CreateProductHandler,
   UpdateProductHandler,

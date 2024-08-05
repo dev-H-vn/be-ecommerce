@@ -148,14 +148,14 @@ export function StringField(
     );
   }
 
-  const minLength = options.minLength || 1;
-
-  decorators.push(
-    MinLength(minLength, {
-      message: `Field must have at least ${options.minLength} characters`,
-      each: options.each,
-    }),
-  );
+  if (options.minLength) {
+    decorators.push(
+      MinLength(options.minLength, {
+        message: `Field must have at least ${options.minLength} characters`,
+        each: options.each,
+      }),
+    );
+  }
 
   if (options.maxLength) {
     decorators.push(

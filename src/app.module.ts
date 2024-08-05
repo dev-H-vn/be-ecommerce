@@ -19,6 +19,7 @@ import { DataSource } from 'typeorm';
 import { ShopModule } from 'modules/shop/shop.module';
 import { ProductModule } from './modules/product/product.module';
 import { ProductRepositoryModule } from 'modules/product/repositories/product.repositories';
+import { DiscountModule } from './modules/discount/discount.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ProductRepositoryModule } from 'modules/product/repositories/product.re
     UserModule,
     ShopModule,
     ProductModule,
+    DiscountModule,
     // ProductRepositoryModule,
     ClsModule.forRoot({
       global: true,
