@@ -9,12 +9,18 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Query,
+  ValidationPipe,
 } from '@nestjs/common';
 import { DiscountService } from './discount.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'guards/auth.guard';
+import {
+  DiscountPageOptionsDto,
+  ProductPageOptionsDto,
+} from 'modules/user/dtos/users-page-options.dto';
 
 @Controller('discount')
 @ApiBearerAuth()
@@ -24,19 +30,20 @@ export class DiscountController {
 
   @Post()
   @UseGuards(AuthGuard)
-  @HttpCode(HttpStatus.OK)
+  //   @HttpCode(HttpStatus.CREATED)
   create(@Body() createDiscountDto: CreateDiscountDto) {
     return this.discountService.create(createDiscountDto);
   }
 
-  @Get()
-  findAll() {
-    return this.discountService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.discountService.findOne(+id);
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Get('/product/:id')
+  findAllDiscountForProduct(
+    @Param('id') id: Uuid,
+    @Query(new ValidationPipe({ transform: true }))
+    pageOptionsDto: DiscountPageOptionsDto,
+  ) {
+    return this.discountService.findAllDiscountForProduct(id, pageOptionsDto);
   }
 
   @Patch(':id')

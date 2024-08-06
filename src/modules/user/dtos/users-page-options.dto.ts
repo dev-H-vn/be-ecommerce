@@ -20,3 +20,15 @@ export class ProductPageOptionsDto extends PageOptionsDto {
     this.isDrafted = isDrafted;
   }
 }
+
+export class DiscountPageOptionsDto extends PageOptionsDto {
+  @BooleanFieldOptional({
+    default: undefined,
+  })
+  readonly isActive: boolean;
+
+  constructor(isActive: boolean, isDrafted: boolean) {
+    super();
+    this.isActive = isActive;
+  }
+}
