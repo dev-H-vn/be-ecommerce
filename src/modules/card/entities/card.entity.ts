@@ -17,7 +17,7 @@ export class CardsEntity extends AbstractEntity {
   @Column('json', { default: [] })
   discountUsersUsed!: ProductEntity[];
 
-  @Column('number')
+  @Column('numeric')
   cardCountProducts!: number;
 
   @OneToOne(() => ShopEntity, (user) => user.card, { onDelete: 'CASCADE' })
