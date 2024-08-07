@@ -8,6 +8,7 @@ import {
   DiscountPageOptionsDto,
   ProductPageOptionsDto,
 } from 'modules/user/dtos/users-page-options.dto';
+import { PageDto } from 'common/dto/page.dto';
 
 @Injectable()
 export class DiscountService {
@@ -17,11 +18,6 @@ export class DiscountService {
   ) {}
 
   async create(createDiscount: CreateDiscountDto) {
-    console.log(
-      '🐉 ~ DiscountService ~ create ~ createDiscountDto ~ 🚀\n',
-      createDiscount,
-    );
-
     const {
       discountStartDate,
       discountEndDate,
@@ -62,9 +58,9 @@ export class DiscountService {
   async findAllDiscountForProduct(
     id: Uuid,
     pageOptionsDto: DiscountPageOptionsDto,
-  ) {
+  ): Promise<PageDto<DiscountsEntity>> {
     const { order, page, skip, take, q } = pageOptionsDto;
-    const foundDiscount = await this.discountsRepository
+    const [foundDiscounts, count] = await this.discountsRepository
       .createQueryBuilder('discounts')
       .where(':discountAppliesToId = ANY(discounts.discountAppliesToIds)', {
         discountAppliesToId: id,
@@ -72,13 +68,25 @@ export class DiscountService {
       .orderBy('discounts.createdAt', order) // Order by createdAt field
       .skip(skip) // Skip the number of records for pagination
       .take(take) // Limit the number of records for pagination
-      .getMany();
-    console.log(
-      '🐉 ~ DiscountService ~ findAllDiscountForProduct ~ id ~ 🚀\n',
-      id,
-      foundDiscount,
-    );
-    return foundDiscount;
+      .getManyAndCount();
+    return { data: foundDiscounts, count };
+  }
+
+  async findAllDiscountForShop(
+    id: Uuid,
+    pageOptionsDto: DiscountPageOptionsDto,
+  ): Promise<PageDto<DiscountsEntity>> {
+    const { order, page, skip, take, q } = pageOptionsDto;
+    const [foundDiscounts, count] = await this.discountsRepository
+      .createQueryBuilder('discounts')
+      .where('discounts.discountShopId = :discountShopId', {
+        discountShopId: id,
+      })
+      .orderBy('discounts.createdAt', order) // Order by createdAt field
+      .skip(skip) // Skip the number of records for pagination
+      .take(take) // Limit the number of records for pagination
+      .getManyAndCount();
+    return { data: foundDiscounts, count };
   }
 
   findAll() {

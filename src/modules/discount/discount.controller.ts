@@ -21,6 +21,8 @@ import {
   DiscountPageOptionsDto,
   ProductPageOptionsDto,
 } from 'modules/user/dtos/users-page-options.dto';
+import { DiscountsEntity } from 'modules/discount/entities/discount.entity';
+import { PageDto } from 'common/dto/page.dto';
 
 @Controller('discount')
 @ApiBearerAuth()
@@ -42,8 +44,19 @@ export class DiscountController {
     @Param('id') id: Uuid,
     @Query(new ValidationPipe({ transform: true }))
     pageOptionsDto: DiscountPageOptionsDto,
-  ) {
+  ): Promise<PageDto<DiscountsEntity>> {
     return this.discountService.findAllDiscountForProduct(id, pageOptionsDto);
+  }
+
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Get('/shop/:id')
+  findAllDiscountForShop(
+    @Param('id') id: Uuid,
+    @Query(new ValidationPipe({ transform: true }))
+    pageOptionsDto: DiscountPageOptionsDto,
+  ): Promise<PageDto<DiscountsEntity>> {
+    return this.discountService.findAllDiscountForShop(id, pageOptionsDto);
   }
 
   @Patch(':id')

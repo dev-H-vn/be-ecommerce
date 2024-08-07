@@ -24,10 +24,6 @@ export class GetProductHandler implements IQueryHandler<GetProductQuery> {
 
   async execute(params: GetProductQuery): Promise<PageDto<ProductEntity>> {
     const { clientId, pageOptionsDto } = params;
-    console.log(
-      '🐉 ~ GetProductHandler ~ execute ~ pageOptionsDto ~ 🚀\n',
-      pageOptionsDto,
-    );
     const { order, page, skip, take, q, isDrafted, isPublished } =
       pageOptionsDto;
 
