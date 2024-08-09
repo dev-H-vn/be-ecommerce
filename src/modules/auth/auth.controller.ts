@@ -59,11 +59,11 @@ export class AuthController {
     type: ShopLoginDto,
     description: 'User info with access token',
   })
-  async userLogin(@Body() userLoginDto: ShopLoginDto): Promise<{
+  async userLogin(@Body() shopLogin: ShopLoginDto): Promise<{
     shop: ShopDto;
     tokens: TokenPayloadDto;
   }> {
-    return await this.shopService.login(userLoginDto);
+    return await this.shopService.login(shopLogin);
   }
 
   @Post('refresh-token')

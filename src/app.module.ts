@@ -30,6 +30,7 @@ import { CardModule } from './modules/card/card.module';
     ProductModule,
     DiscountModule,
     // ProductRepositoryModule,
+    CardModule,
     ClsModule.forRoot({
       global: true,
       middleware: {
@@ -63,7 +64,6 @@ import { CardModule } from './modules/card/card.module';
       },
     }),
     HealthCheckerModule,
-    CardModule,
   ],
 
   providers: [

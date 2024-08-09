@@ -15,7 +15,7 @@ export class CardsEntity extends AbstractEntity {
   cardState!: string;
 
   @Column('json', { default: [] })
-  discountUsersUsed!: ProductEntity[];
+  cardProducts!: ProductEntity[];
 
   @Column('numeric')
   cardCountProducts!: number;

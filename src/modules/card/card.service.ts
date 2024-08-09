@@ -4,21 +4,32 @@ import { UpdateCardDto } from './dto/update-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductEntity } from 'modules/product/entities/product.entity';
+import { CardsEntity } from 'modules/card/entities/card.entity';
 
 @Injectable()
 export class CardService {
   constructor(
     @InjectRepository(ProductEntity)
     private productRepository: Repository<ProductEntity>,
+    @InjectRepository(CardsEntity)
+    private cardsRepository: Repository<CardsEntity>,
   ) {}
+
   async create(req: RequestType, createCardDto: CreateCardDto) {
     const { clientId } = req;
-    const { product } = createCardDto;
+    const { productId, quantity, shopId } = createCardDto.product;
 
-    const foundShop = await this.productRepository.findOneBy({
-      id: product.shopId,
+    const foundProduct = await this.productRepository.findOneBy({
+      id: productId,
     });
-    if (!foundShop) throw new NotFoundException('Product not found!');
+    if (!foundProduct) throw new NotFoundException('Product not found!');
+
+    if (quantity <= 0) {
+      //delete
+    }
+
+    const resp = await this.cardsRepository.save({});
+
     console.log(
       '🐉 ~ CardService ~ create ~ createCardDto ~ 🚀\n',
       createCardDto,
