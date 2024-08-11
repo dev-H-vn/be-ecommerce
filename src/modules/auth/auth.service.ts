@@ -22,7 +22,6 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private configService: ApiConfigService,
-    private userService: UserService,
     @InjectRepository(KeyEntity)
     private keyRepository: Repository<KeyEntity>,
     private readonly queryBus: QueryBus,

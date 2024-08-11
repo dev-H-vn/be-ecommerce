@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ShopRegisterDto } from 'modules/auth/dto/register.dto';
+import { RegisterDto } from 'modules/auth/dto/register.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ShopEntity } from 'modules/shop/shop.entity';
 import { Repository } from 'typeorm';
@@ -7,7 +7,7 @@ import { generateHash, generateKeyPair, validateHash } from 'common/utils';
 import { AuthService } from 'modules/auth/auth.service';
 import { RoleType } from 'constant';
 import { v4 as uuidV4 } from 'uuid';
-import { ShopLoginDto } from 'modules/auth/dto/login.dto';
+import { LoginDto } from 'modules/auth/dto/login.dto';
 
 @Injectable()
 export class ShopService {
@@ -17,8 +17,8 @@ export class ShopService {
     private shopRepository: Repository<ShopEntity>,
   ) {}
 
-  async register(createShopDto: ShopRegisterDto) {
-    const { email, password, shopName } = createShopDto;
+  async register(createShopDto: RegisterDto) {
+    const { email, password, userName } = createShopDto;
 
     const holderShop = await this.shopRepository.findOne({
       where: { email: email },
@@ -31,7 +31,7 @@ export class ShopService {
     const newShop = await this.shopRepository.create({
       id: uuidV4(),
       email,
-      shopName,
+      shopName: userName,
       password: passWordHash,
     });
     if (newShop) {
@@ -62,7 +62,7 @@ export class ShopService {
     return newShop;
   }
 
-  async login(loginShopDto: ShopLoginDto) {
+  async login(loginShopDto: LoginDto) {
     const { email, password } = loginShopDto;
 
     const foundShop = await this.shopRepository.findOne({
@@ -104,10 +104,6 @@ export class ShopService {
   findOne(id: number) {
     return `This action returns a #${id} shop`;
   }
-
-  //   update(id: number, updateShopDto: UpdateShopDto) {
-  //     return `This action updates a #${id} shop`;
-  //   }
 
   remove(id: number) {
     return `This action removes a #${id} shop`;

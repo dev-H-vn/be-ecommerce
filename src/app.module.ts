@@ -18,7 +18,6 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { ShopModule } from 'modules/shop/shop.module';
 import { ProductModule } from './modules/product/product.module';
-import { ProductRepositoryModule } from 'modules/product/repositories/product.repositories';
 import { DiscountModule } from './modules/discount/discount.module';
 import { CardModule } from './modules/card/card.module';
 

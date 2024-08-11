@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { type FindOptionsWhere, Repository } from 'typeorm';
@@ -13,11 +13,15 @@ import { UserRegisterDto } from '../auth/dto/user-register.dto';
 import { type UserDto } from './dtos/user.dto';
 import { type UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import { UserEntity } from './user.entity';
-import { generateHash } from 'common/utils';
-
+import { RegisterDto } from 'modules/auth/dto/register.dto';
+import { v4 as uuidV4 } from 'uuid';
+import { generateHash, generateKeyPair, validateHash } from 'common/utils';
+import { AuthService } from 'modules/auth/auth.service';
+import { LoginDto } from 'modules/auth/dto/login.dto';
 @Injectable()
 export class UserService {
   constructor(
+    private authService: AuthService,
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
     private validatorService: ValidatorService,
@@ -49,43 +53,87 @@ export class UserService {
     return queryBuilder.getOne();
   }
 
-  @Transactional()
-  async createUser(
-    userRegisterDto: UserRegisterDto,
-    file?: IFile,
-  ): Promise<UserEntity> {
-    const user = this.userRepository.create(userRegisterDto);
+  async register(userRegister: RegisterDto): Promise<UserEntity> {
+    const { email, password, userName, role } = userRegister;
 
-    if (file && !this.validatorService.isImage(file.mimetype)) {
-      throw new FileNotImageException();
+    const holderUser = await this.userRepository.findOne({
+      where: { email },
+    });
+    if (holderUser) {
+      throw new BadRequestException('User Already registered!');
     }
 
-    if (file) {
-      user.avatar = await this.awsS3Service.uploadImage(file);
+    const passWordHash = generateHash(password);
+    const newUser = await this.userRepository.create({
+      id: uuidV4(),
+      email,
+      userName: userName,
+      password: passWordHash,
+      role: role,
+    });
+    if (newUser) {
+      const { privateKey, publicKey } = generateKeyPair();
+
+      //create token pair
+      const tokens = await this.authService.createTokenPair({
+        privateKey: privateKey,
+        publicKey: publicKey,
+        role: role,
+        userId: newUser.id,
+      });
+      console.log('🐉 ~ ShopService ~ register ~ tokens ~  🚀\n', tokens);
+
+      const publicKeyString = await this.authService.createKeyToken({
+        publicKey,
+        privateKey,
+        userId: newUser.id,
+        role: role,
+        refreshToken: tokens.refetchToken,
+      });
+      if (!publicKeyString) {
+        throw new BadRequestException('publicKeyString error');
+      }
+      await this.userRepository.save(newUser);
     }
 
-    user.password = generateHash(user.password);
-    await this.userRepository.save(user);
-    return user;
+    return newUser;
   }
 
-  async getUsers(pageOptionsDto: UsersPageOptionsDto): Promise<any> {
-    // const queryBuilder = this.userRepository.createQueryBuilder('user');
-    // const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
-    // return items.toPageDto(pageMetaDto);
-  }
+  async login(loginDto: LoginDto) {
+    const { email, password, userName, role } = loginDto;
 
-  async getUser(userId: Uuid): Promise<UserDto> {
-    const queryBuilder = this.userRepository.createQueryBuilder('user');
-
-    queryBuilder.where('user.id = :userId', { userId });
-
-    const userEntity = await queryBuilder.getOne();
-
-    if (!userEntity) {
-      throw new UserNotFoundException();
+    const foundUser = await this.userRepository.findOne({
+      where: {
+        ...(email && { email: email }),
+        ...(userName && { userName: userName }),
+      },
+    });
+    if (!foundUser) {
+      throw new BadRequestException('User not registered!');
     }
 
-    return userEntity.toDto();
+    const passWordHash = validateHash(password, foundUser.password);
+    if (!passWordHash) throw new BadRequestException('Authentication error!');
+
+    const { privateKey, publicKey } = generateKeyPair();
+    //create token pair
+    const tokens = await this.authService.createTokenPair({
+      privateKey: privateKey.toString(),
+      publicKey: publicKey,
+      role: role,
+      userId: foundUser.id,
+    });
+    const publicKeyString = await this.authService.createKeyToken({
+      privateKey,
+      publicKey,
+      userId: foundUser.id,
+      role: role,
+      refreshToken: tokens.refetchToken,
+    });
+    if (!publicKeyString) {
+      throw new BadRequestException('publicKeyString error');
+    }
+
+    return { shop: foundUser, tokens };
   }
 }

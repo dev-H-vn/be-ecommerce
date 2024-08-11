@@ -20,16 +20,16 @@ import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { UserRegisterDto } from './dto/user-register.dto';
-import { ShopRegisterDto } from 'modules/auth/dto/register.dto';
 import { ShopService } from 'modules/shop/shop.service';
-import { ShopDto } from 'modules/shop/dto/shop.dto';
-import { ShopLoginDto } from 'modules/auth/dto/login.dto';
+import { LoginDto } from 'modules/auth/dto/login.dto';
 import {
   RefreshTokenDTO,
   TokenPayloadDto,
 } from 'modules/auth/dto/token-payload.dto';
 import { AuthGuard } from 'guards/auth.guard';
 import { KeyEntity } from 'modules/auth/key.entity';
+import { RegisterDto } from 'modules/auth/dto/register.dto';
+import { ShopEntity } from 'modules/shop/shop.entity';
 
 @ApiBearerAuth()
 @Controller('auth')
@@ -41,38 +41,44 @@ export class AuthController {
     private shopService: ShopService,
   ) {}
 
-  @Post('register/shop')
+  @Post('register')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
-    type: ShopRegisterDto,
+    type: RegisterDto,
     description: 'Successfully Registered',
   })
   async shopRegister(
-    @Body() shopRegisterDto: ShopRegisterDto,
-  ): Promise<ShopDto> {
-    return await this.shopService.register(shopRegisterDto);
+    @Body() registerDto: RegisterDto,
+  ): Promise<ShopEntity | UserEntity> {
+    const { role } = registerDto;
+    if (role === 'SHOP') {
+      return await this.shopService.register(registerDto);
+    } else {
+      return await this.userService.register(registerDto);
+    }
   }
 
-  @Post('login/shop')
+  @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
-    type: ShopLoginDto,
+    type: LoginDto,
     description: 'User info with access token',
   })
-  async userLogin(@Body() shopLogin: ShopLoginDto): Promise<{
-    shop: ShopDto;
+  async userLogin(@Body() loginDto: LoginDto): Promise<{
+    shop: ShopEntity | UserEntity;
     tokens: TokenPayloadDto;
   }> {
-    return await this.shopService.login(shopLogin);
+    const { role } = loginDto;
+    if (role === 'SHOP') {
+      return await this.shopService.login(loginDto);
+    } else {
+      return await this.userService.login(loginDto);
+    }
   }
 
   @Post('refresh-token')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
-  @ApiOkResponse({
-    type: ShopLoginDto,
-    description: 'User info with access token',
-  })
   async refreshToken(
     @Req() request: RequestType,
     @Body() refreshToken: RefreshTokenDTO,
@@ -84,29 +90,10 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
   @ApiOkResponse({
-    type: ShopLoginDto,
+    type: LoginDto,
     description: 'User info with access token',
   })
   async logout(@Req() request: RequestType): Promise<any> {
     return await this.authService.logout(request);
-  }
-
-  @Post('register')
-  @HttpCode(HttpStatus.OK)
-  @ApiOkResponse({ type: UserDto, description: 'Successfully Registered' })
-  async userRegister(
-    @Body() userRegisterDto: UserRegisterDto,
-    @UploadedFile() file?: IFile,
-  ): Promise<UserDto> {
-    return await this.userService.createUser(userRegisterDto, file);
-  }
-
-  @Version('1')
-  @Get('me')
-  @HttpCode(HttpStatus.OK)
-  @Auth([RoleType.USER, RoleType.ADMIN])
-  @ApiOkResponse({ type: UserDto, description: 'current user info' })
-  getCurrentUser(@AuthUser() user: UserEntity): UserDto {
-    return user.toDto();
   }
 }
