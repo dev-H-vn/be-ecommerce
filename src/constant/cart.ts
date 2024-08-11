@@ -1,4 +1,4 @@
-export enum CardStatus {
+export enum CartStatus {
   ACTIVE = 'ACTIVE',
   COMPLETED = 'COMPLETED',
   FAILED = 'FAILED',

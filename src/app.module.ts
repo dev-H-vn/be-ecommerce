@@ -19,7 +19,7 @@ import { DataSource } from 'typeorm';
 import { ShopModule } from 'modules/shop/shop.module';
 import { ProductModule } from './modules/product/product.module';
 import { DiscountModule } from './modules/discount/discount.module';
-import { CardModule } from './modules/card/card.module';
+import { CartModule } from 'modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { CardModule } from './modules/card/card.module';
     ProductModule,
     DiscountModule,
     // ProductRepositoryModule,
-    CardModule,
+    CartModule,
     ClsModule.forRoot({
       global: true,
       middleware: {

@@ -1,6 +1,6 @@
 import { AbstractEntity } from 'common/abstract.entity';
 import { UseDto } from 'decorators';
-import { CardsEntity } from 'modules/card/entities/card.entity';
+import { CartsEntity } from 'modules/cart/entities/cart.entity';
 import { InventoriesEntity } from 'modules/product/entities/inventories.entity';
 import { ShopDto } from 'modules/shop/dto/shop.dto';
 import { Column, Entity, OneToOne } from 'typeorm';
@@ -16,7 +16,4 @@ export class ShopEntity extends AbstractEntity<ShopDto> {
 
   @Column({ unique: true, nullable: true, type: 'varchar' })
   email!: string | null;
-
-  @OneToOne(() => CardsEntity, (user) => user.cardUser)
-  card!: CardsEntity;
 }

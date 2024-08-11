@@ -11,18 +11,16 @@ import {
   UUIDField,
 } from 'decorators';
 
-class ProductAddToCard {
+class ProductAddToCart {
   @UUIDField()
   productId!: Uuid;
-  @UUIDField()
-  shopId!: Uuid;
   @NumberField()
   quantity!: number;
 }
 
-export class CreateCardDto {
+export class CreateCartDto {
   @IsObject()
   @ValidateNested()
-  @Type(() => ProductAddToCard)
-  product!: ProductAddToCard;
+  @Type(() => ProductAddToCart)
+  product!: ProductAddToCart;
 }

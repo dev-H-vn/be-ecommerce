@@ -13,9 +13,8 @@ import {
 import { ArgumentMetadata, type Type } from '@nestjs/common/interfaces';
 import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
-import { type RoleType } from '../constant';
-import { AdminGuard } from '../guards/auth.guard';
-import { RolesGuard } from '../guards/roles.guard';
+import { RoleType } from '../constant';
+import { AuthGuard } from '../guards/auth.guard';
 import { AuthUserInterceptor } from '../interceptors/auth-user-interceptor.service';
 import { PublicRoute } from './public-route.decorator';
 import { Roles } from './roles.decorator';
@@ -23,14 +22,14 @@ import { isObjectIdOrHexString } from 'mongoose';
 import { isUUID } from 'class-validator';
 
 export function Auth(
-  roles: RoleType[] = [],
+  roles: RoleType[] = [RoleType.USER],
   options?: Partial<{ public: boolean }>,
 ): MethodDecorator {
   const isPublicRoute = options?.public;
 
   return applyDecorators(
     Roles(roles),
-    UseGuards(AdminGuard, RolesGuard),
+    UseGuards(AuthGuard),
     ApiBearerAuth('bearer'),
     UseInterceptors(AuthUserInterceptor),
     ApiUnauthorizedResponse({ description: 'Unauthorized' }),

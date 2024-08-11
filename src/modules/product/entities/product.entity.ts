@@ -1,5 +1,6 @@
 import { IsNumber, Max, Min } from 'class-validator';
 import { AbstractEntity } from 'common/abstract.entity';
+import { CartsEntity } from 'modules/cart/entities/cart.entity';
 import { ClothesEntity } from 'modules/product/entities/clothing.entity';
 import { ElectronicEntity } from 'modules/product/entities/electronic.entity';
 import { InventoriesEntity } from 'modules/product/entities/inventories.entity';
@@ -10,6 +11,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
 } from 'typeorm';
 
