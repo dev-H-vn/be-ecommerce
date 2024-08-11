@@ -18,6 +18,7 @@ export class DiscountService {
   ) {}
 
   async create(createDiscount: CreateDiscountDto) {
+    const now = new Date();
     const {
       discountStartDate,
       discountEndDate,
@@ -26,8 +27,8 @@ export class DiscountService {
     } = createDiscount;
 
     if (
-      new Date() >= new Date(discountEndDate) ||
-      new Date() > new Date(discountStartDate)
+      now >= new Date(discountEndDate) ||
+      new Date(now.setHours(now.getHours() - 1)) > new Date(discountStartDate)
     )
       throw new BadRequestException(
         'Start date and end date must be in the future!',

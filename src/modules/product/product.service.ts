@@ -16,16 +16,13 @@ import { PageDto } from 'common/dto/page.dto';
 import { UpdateProductCommand } from 'modules/product/commands/update-product.command';
 import { ClothesEntity } from 'modules/product/entities/clothing.entity';
 import { ElectronicEntity } from 'modules/product/entities/electronic.entity';
+import { ProductRepositories } from 'modules/product/repositories/product.repositories';
 
 @Injectable()
 export class ProductService {
   constructor(
     @Inject('PRODUCT_REPOSITORIES')
-    private repositories: {
-      productRepository: Repository<ProductEntity>;
-      clothesRepository: Repository<ClothesEntity>;
-      electroRepository: Repository<ElectronicEntity>;
-    },
+    private repositories: ProductRepositories,
     private commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}

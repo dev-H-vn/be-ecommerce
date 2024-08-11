@@ -20,6 +20,7 @@ import { ShopModule } from 'modules/shop/shop.module';
 import { ProductModule } from './modules/product/product.module';
 import { DiscountModule } from './modules/discount/discount.module';
 import { CartModule } from 'modules/cart/cart.module';
+import { OrderModule } from './modules/order/order.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { CartModule } from 'modules/cart/cart.module';
       },
     }),
     HealthCheckerModule,
+    OrderModule,
   ],
 
   providers: [

@@ -23,6 +23,8 @@ import {
 } from 'modules/user/dtos/users-page-options.dto';
 import { DiscountsEntity } from 'modules/discount/entities/discount.entity';
 import { PageDto } from 'common/dto/page.dto';
+import { Auth } from 'decorators';
+import { RoleType } from 'constant';
 
 @Controller('discount')
 @ApiBearerAuth()
@@ -31,8 +33,7 @@ export class DiscountController {
   constructor(private readonly discountService: DiscountService) {}
 
   @Post()
-  @UseGuards(AuthGuard)
-  //   @HttpCode(HttpStatus.CREATED)
+  @Auth([RoleType.ADMIN, RoleType.SHOP])
   create(@Body() createDiscountDto: CreateDiscountDto) {
     return this.discountService.create(createDiscountDto);
   }

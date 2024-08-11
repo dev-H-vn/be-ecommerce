@@ -21,6 +21,9 @@ export class DiscountsEntity extends AbstractEntity {
   @Column({ type: 'varchar' })
   discountCode!: string;
 
+  @Column({ type: 'bigint' })
+  discountValue!: number;
+
   @UpdateDateColumn({
     type: 'timestamp',
   })
@@ -56,7 +59,7 @@ export class DiscountsEntity extends AbstractEntity {
   //   @OneToOne(() => ShopEntity)
   //   discountShop!: ShopEntity;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   discountShopId!: Uuid;
 
   @Column('uuid', { array: true, default: () => 'array[]::uuid[]' })

@@ -31,6 +31,9 @@ export class CreateDiscountDto {
   @DateField()
   discountEndDate!: Date;
 
+  @NumberField()
+  discountValue!: number;
+
   @NumberField({ default: 10 })
   discountMaxUses!: number;
 
@@ -49,7 +52,7 @@ export class CreateDiscountDto {
   @EnumField(() => DiscountAppliesTo)
   discountAppliesTo!: DiscountAppliesTo;
 
-  @UUIDField()
+  @UUIDField({ nullable: true })
   discountShopId!: Uuid;
 
   @IsArray()
