@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { OrdersRepositories } from 'modules/order/repositories/order.repositories';
 import { CheckoutDto, CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { OrdersRepositories } from 'modules/order/repositories/order.repositories';
 
 @Injectable()
 export class OrderService {
@@ -10,7 +10,11 @@ export class OrderService {
     private repositories: OrdersRepositories,
   ) {}
 
-  create(createOrderDto: CreateOrderDto) {
+  async orderProducts(request: RequestType, checkoutDto: CheckoutDto) {
+    const { orders, checkout_order } = await this.getCheckoutPreview(
+      request,
+      checkoutDto,
+    );
     return 'This action adds a new order';
   }
 
@@ -59,7 +63,6 @@ export class OrderService {
         discounts,
         discountsIds,
       );
-
       const shopDiscount =
         shopDiscountIds.length > 0 &&
         (await this.repositories.discountRepository
@@ -118,10 +121,13 @@ export class OrderService {
     );
 
     return {
-      ...checkout_order,
-      totalCheckOut: totalCheckOut <= 0 ? 0 : totalCheckOut,
-      totalDiscount: totalDiscount,
-    } as typeof checkout_order;
+      orders,
+      checkout_order: {
+        ...checkout_order,
+        totalCheckOut: totalCheckOut <= 0 ? 0 : totalCheckOut,
+        totalDiscount: totalDiscount,
+      } as typeof checkout_order,
+    };
   }
 
   findOne(id: number) {

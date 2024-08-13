@@ -4,6 +4,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ClsModule } from 'nestjs-cls';
+import { CacheModule } from '@nestjs/cache-manager';
 
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
 import { UserModule } from './modules/user/user.module';
@@ -29,8 +30,9 @@ import { OrderModule } from './modules/order/order.module';
     ShopModule,
     ProductModule,
     DiscountModule,
-    // ProductRepositoryModule,
     CartModule,
+    HealthCheckerModule,
+    OrderModule,
     ClsModule.forRoot({
       global: true,
       middleware: {
@@ -63,8 +65,12 @@ import { OrderModule } from './modules/order/order.module';
         );
       },
     }),
-    HealthCheckerModule,
-    OrderModule,
+    CacheModule.registerAsync({
+      imports: [SharedModule], // Optionally import ConfigModule if needed
+      inject: [ApiConfigService], // Inject ConfigService to access environment variables
+      useFactory: async (configService: ApiConfigService) =>
+        configService.redisConfig,
+    }),
   ],
 
   providers: [

@@ -21,16 +21,23 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto);
+  create(@Req() request: RequestType, @Body() checkoutDto: CheckoutDto) {
+    return this.orderService.orderProducts(request, checkoutDto);
   }
 
   @Post('/order-preview')
-  //   @Auth()
+  @Auth()
   getCheckoutPreview(
     @Req() request: RequestType,
     @Body() checkoutDto: CheckoutDto,
   ) {
+    console.log('🐉 ~ OrderController ~ checkoutDto ~  🚀\n', checkoutDto);
+    return this.orderService.getCheckoutPreview(request, checkoutDto);
+  }
+
+  @Post('/order-products')
+  @Auth()
+  orderProducts(@Req() request: RequestType, @Body() checkoutDto: CheckoutDto) {
     console.log('🐉 ~ OrderController ~ checkoutDto ~  🚀\n', checkoutDto);
     return this.orderService.getCheckoutPreview(request, checkoutDto);
   }

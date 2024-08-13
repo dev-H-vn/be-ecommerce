@@ -16,14 +16,14 @@ export class UserRegisterDto {
 }
 
 export class RegisterDto {
+  @EmailFieldOptional({ nullable: false })
+  email!: string;
+
   @StringField({ nullable: false })
   userName!: string;
 
   @PasswordField({ minLength: 6 })
   password!: string;
-
-  @EmailFieldOptional({ nullable: false })
-  email!: string;
 
   @EnumField(() => RoleType, { default: RoleType.USER })
   role!: RoleType;

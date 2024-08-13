@@ -21,7 +21,7 @@ export class DiscountsEntity extends AbstractEntity {
   @Column({ type: 'varchar' })
   discountCode!: string;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', default: 0 })
   discountValue!: number;
 
   @UpdateDateColumn({

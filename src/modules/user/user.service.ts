@@ -2,16 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { type FindOptionsWhere, Repository } from 'typeorm';
-import { Transactional } from 'typeorm-transactional';
 
-import type { PageDto } from '../../common/dto/page.dto';
-import { FileNotImageException, UserNotFoundException } from '../../exceptions';
-import { IFile } from '../../interfaces';
 import { AwsS3Service } from '../../shared/services/aws-s3.service';
 import { ValidatorService } from '../../shared/services/validator.service';
-import { UserRegisterDto } from '../auth/dto/user-register.dto';
-import { type UserDto } from './dtos/user.dto';
-import { type UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import { UserEntity } from './user.entity';
 import { RegisterDto } from 'modules/auth/dto/register.dto';
 import { v4 as uuidV4 } from 'uuid';

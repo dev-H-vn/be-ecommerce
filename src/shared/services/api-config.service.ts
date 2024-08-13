@@ -7,6 +7,8 @@ import type { Units } from 'parse-duration';
 import { default as parse } from 'parse-duration';
 
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
+import { CacheModuleOptions, CacheStoreFactory } from '@nestjs/cache-manager';
+import redisStore from 'cache-manager-redis-store';
 
 @Injectable()
 export class ApiConfigService {
@@ -95,6 +97,16 @@ export class ApiConfigService {
       synchronize: this.getString('DB_SYNCHRONIZE') === 'true',
       logging: this.getBoolean('ENABLE_ORM_LOGS'),
       namingStrategy: new SnakeNamingStrategy(),
+    };
+  }
+
+  get redisConfig(): CacheModuleOptions {
+    return {
+      store: redisStore as unknown as CacheStoreFactory,
+      host: this.getString('REDIS_HOST'),
+      port: this.getNumber('REDIS_PORT'),
+      ttl: this.getNumber('CACHE_TTL'), // Time to live (seconds)
+      auth_pass: this.getString('REDIS_PASSWORD'), // Optional password
     };
   }
 

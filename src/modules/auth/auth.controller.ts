@@ -1,25 +1,17 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
   Req,
-  UploadedFile,
   UseGuards,
-  Version,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
-import { RoleType } from '../../constant';
-import { Auth, AuthUser } from '../../decorators';
-import { IFile } from '../../interfaces';
-import { UserDto } from '../user/dtos/user.dto';
 import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import { UserRegisterDto } from './dto/user-register.dto';
 import { ShopService } from 'modules/shop/shop.service';
 import { LoginDto } from 'modules/auth/dto/login.dto';
 import {
@@ -27,7 +19,6 @@ import {
   TokenPayloadDto,
 } from 'modules/auth/dto/token-payload.dto';
 import { AuthGuard } from 'guards/auth.guard';
-import { KeyEntity } from 'modules/auth/key.entity';
 import { RegisterDto } from 'modules/auth/dto/register.dto';
 import { ShopEntity } from 'modules/shop/shop.entity';
 
