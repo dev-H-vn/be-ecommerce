@@ -8,6 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { RoleType } from 'constant';
 import { AuthGuard } from 'guards/auth.guard';
 import { LoginDto } from 'modules/auth/dto/login.dto';
 import { RegisterDto } from 'modules/auth/dto/register.dto';
@@ -43,11 +44,11 @@ export class AuthController {
   ): Promise<ShopEntity | UserEntity> {
     const { role } = registerDto;
 
-    if (role === 'SHOP') {
-      return await this.shopService.register(registerDto);
+    if (role === RoleType.SHOP) {
+      return this.shopService.register(registerDto);
     }
 
-    return await this.userService.register(registerDto);
+    return this.userService.register(registerDto);
   }
 
   @Post('login')
@@ -62,11 +63,11 @@ export class AuthController {
   }> {
     const { role } = loginDto;
 
-    if (role === 'SHOP') {
-      return await this.shopService.login(loginDto);
+    if (role === RoleType.SHOP) {
+      return this.shopService.login(loginDto);
     }
 
-    return await this.userService.login(loginDto);
+    return this.userService.login(loginDto);
   }
 
   @Post('refresh-token')
@@ -76,7 +77,7 @@ export class AuthController {
     @Req() request: RequestType,
     @Body() refreshToken: RefreshTokenDTO,
   ): Promise<TokenPayloadDto | undefined> {
-    return await this.authService.handleRefreshToken(request, refreshToken);
+    return this.authService.handleRefreshToken(request, refreshToken);
   }
 
   @Post('logout')
@@ -87,6 +88,6 @@ export class AuthController {
     description: 'User info with access token',
   })
   async logout(@Req() request: RequestType): Promise<any> {
-    return await this.authService.logout(request);
+    return this.authService.logout(request);
   }
 }

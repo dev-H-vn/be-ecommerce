@@ -39,7 +39,10 @@ export class OrderController {
 
   @Post('/order-products')
   @Auth()
-  orderProducts(@Req() request: RequestType, @Body() checkoutDto: CheckoutDto) {
+  async checkoutPreview(
+    @Req() request: RequestType,
+    @Body() checkoutDto: CheckoutDto,
+  ) {
     console.log('🐉 ~ OrderController ~ checkoutDto ~  🚀\n', checkoutDto);
 
     return this.orderService.getCheckoutPreview(request, checkoutDto);

@@ -28,7 +28,7 @@ export class CartService {
     }
 
     if (quantity <= 0) {
-      return await this.removeProduct(req, productId);
+      return this.removeProduct(req, productId);
     }
 
     let foundCart = await this.cardsRepository.findOne({
@@ -65,7 +65,7 @@ export class CartService {
   async findAll(req: RequestType) {
     const { clientId } = req;
 
-    return await this.cardsRepository.findOne({
+    return this.cardsRepository.findOne({
       where: { cardUserId: clientId },
     });
   }
@@ -83,7 +83,7 @@ export class CartService {
     foundCart.cardProducts = foundCart.cardProducts.filter(
       (product) => product.id !== productId,
     );
-    this.cardsRepository.save(foundCart);
+    await this.cardsRepository.save(foundCart);
 
     return foundCart;
   }

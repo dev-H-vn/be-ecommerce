@@ -56,7 +56,7 @@ export class DiscountService {
       throw new BadRequestException('Discount exist!');
     }
 
-    return await this.discountsRepository.save(createDiscount);
+    return this.discountsRepository.save(createDiscount);
   }
 
   async findAllDiscountForProduct(

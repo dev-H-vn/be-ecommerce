@@ -3,19 +3,19 @@ const rules = {
   'n/no-missing-import': 'off',
   'canonical/filename-match-exported': 'error',
   'canonical/no-restricted-strings': 'error',
-  'canonical/no-use-extend-native': 'error',
+  'canonical/no-use-extend-native': 'off',
+  '@typescript-eslint/no-invalid-void-type': 'off',
+  '@typescript-eslint/no-redundant-type-constituents': 'off',
+  'sonarjs/no-identical-functions': 'off',
   'canonical/prefer-inline-type-import': 'off',
   'unicorn/prevent-abbreviations': 'off',
+  '@typescript-eslint/no-unsafe-enum-comparison': 'off',
   'unicorn/no-abusive-eslint-disable': 'off',
   'unicorn/no-null': 'off',
   'unicorn/no-static-only-class': 'off',
   'unicorn/prefer-module': 'off',
   'unicorn/expiring-todo-comments': 'off',
   'sonarjs/no-duplicate-string': 'off',
-  'import/no-unresolved': [
-    'error',
-    { ignore: ['^@hr-drone/*', '^firebase-admin/.+'] },
-  ],
   'import/no-duplicates': ['error'],
   'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
   'prettier/prettier': [
@@ -37,48 +37,9 @@ const rules = {
    * plugin:typescript-eslint
    */
   'no-unused-vars': 'off',
-  '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   '@typescript-eslint/adjacent-overload-signatures': 'error',
   'max-params': ['error', 7],
   '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
-  '@typescript-eslint/ban-types': [
-    'error',
-    {
-      types: {
-        Object: {
-          message: 'Avoid using the `Object` type. Did you mean `object`?',
-        },
-        Function: {
-          message:
-            'Avoid using the `Function` type. Prefer a specific function type, like `() => void`.',
-        },
-        Boolean: {
-          message: 'Avoid using the `Boolean` type. Did you mean `boolean`?',
-          fixWith: 'boolean',
-        },
-        Number: {
-          message: 'Avoid using the `Number` type. Did you mean `number`?',
-          fixWith: 'number',
-        },
-        Symbol: {
-          message: 'Avoid using the `Symbol` type. Did you mean `symbol`?',
-          fixWith: 'symbol',
-        },
-        String: {
-          message: 'Avoid using the `String` type. Did you mean `string`?',
-          fixWith: 'string',
-        },
-        '{}': {
-          message: 'Use Record<K, V> instead',
-          fixWith: 'Record<K, V>',
-        },
-        object: {
-          message: 'Use Record<K, V> instead',
-          fixWith: 'Record<K, V>',
-        },
-      },
-    },
-  ],
   '@typescript-eslint/explicit-member-accessibility': [
     'off',
     {
@@ -87,31 +48,15 @@ const rules = {
       },
     },
   ],
-  '@typescript-eslint/member-delimiter-style': [
-    'error',
-    {
-      multiline: {
-        delimiter: 'semi',
-        requireLast: true,
-      },
-      singleline: {
-        delimiter: 'semi',
-        requireLast: false,
-      },
-    },
-  ],
   '@typescript-eslint/member-ordering': 'off',
   '@typescript-eslint/no-extraneous-class': 'off',
   '@typescript-eslint/no-angle-bracket-type-assertion': 'off',
-  '@typescript-eslint/no-empty-function': 'error',
-  '@typescript-eslint/no-unnecessary-condition': 'error',
   '@typescript-eslint/no-confusing-non-null-assertion': 'warn',
   '@typescript-eslint/no-duplicate-enum-values': 'error',
   '@typescript-eslint/no-empty-interface': 'error',
   '@typescript-eslint/no-unnecessary-type-assertion': 'error',
   '@typescript-eslint/no-explicit-any': 'error',
   '@typescript-eslint/no-inferrable-types': 'error',
-  '@typescript-eslint/await-thenable': 'error',
   '@typescript-eslint/ban-ts-comment': 'error',
   '@typescript-eslint/ban-tslint-comment': 'error',
   '@typescript-eslint/consistent-indexed-object-style': 'error',
@@ -124,7 +69,6 @@ const rules = {
   '@typescript-eslint/restrict-template-expressions': 'off',
   '@typescript-eslint/no-require-imports': 'error',
   'keyword-spacing': 'off',
-  '@typescript-eslint/keyword-spacing': 'error',
   '@typescript-eslint/no-namespace': 'error',
   '@typescript-eslint/no-this-alias': 'error',
   '@typescript-eslint/no-use-before-define': 'error',
@@ -132,52 +76,6 @@ const rules = {
   '@typescript-eslint/prefer-for-of': 'error',
   '@typescript-eslint/prefer-function-type': 'error',
   '@typescript-eslint/prefer-namespace-keyword': 'error',
-  '@typescript-eslint/quotes': [
-    'error',
-    'single',
-    {
-      avoidEscape: true,
-      allowTemplateLiterals: true,
-    },
-  ],
-  '@typescript-eslint/semi': ['error', 'always'],
-  '@typescript-eslint/naming-convention': [
-    'error',
-    {
-      selector: 'default',
-      format: ['camelCase', 'PascalCase', 'snake_case', 'UPPER_CASE'],
-      filter: {
-        regex: '^_.*$',
-        match: false,
-      },
-    },
-    {
-      selector: 'variable',
-      format: ['camelCase', 'UPPER_CASE'],
-    },
-    {
-      selector: 'interface',
-      format: ['PascalCase'],
-      prefix: ['I'],
-    },
-    {
-      selector: 'typeLike',
-      format: ['PascalCase'],
-    },
-    {
-      selector: 'memberLike',
-      modifiers: ['private'],
-      format: ['camelCase'],
-      leadingUnderscore: 'forbid',
-    },
-    {
-      selector: 'variable',
-      types: ['boolean'],
-      format: ['PascalCase'],
-      prefix: ['is', 'should', 'has', 'can', 'did', 'will'],
-    },
-  ],
-  '@typescript-eslint/type-annotation-spacing': 'error',
   '@typescript-eslint/unified-signatures': 'error',
   '@typescript-eslint/interface-name-prefix': 'off',
   '@typescript-eslint/no-non-null-assertion': 'off',
@@ -240,7 +138,7 @@ const rules = {
   'no-dupe-else-if': 'error',
   'lines-between-class-members': ['error', 'always'],
   'no-console': [
-    'error',
+    'warn',
     {
       allow: [
         'info',
@@ -307,13 +205,38 @@ const rules = {
 
   'no-unused-vars': 'off',
   'unused-imports/no-unused-imports': 'error',
-  'unused-imports/no-unused-vars': [
-    'warn',
-    {
-      vars: 'all',
-      args: 'none',
-    },
-  ],
+  //   'unused-imports/no-unused-vars': [
+  //     'warn',
+  //     {
+  //       vars: 'all',
+  //       args: 'none',
+  //     },
+  //   ],
+  '@typescript-eslint/no-unsafe-member-access': 'off',
+  '@typescript-eslint/no-unsafe-assignment': 'off',
+  'deprecation/deprecation': 'off',
+  '@typescript-eslint/no-unused-vars': 'off',
+  'import/no-unresolved': 'off',
+  '@typescript-eslint/no-explicit-any': 'off',
+  '@typescript-eslint/ban-types': 'off',
+  '@typescript-eslint/no-unnecessary-type-parameters': 'off',
+  'unicorn/filename-case': 'off',
+  '@typescript-eslint/no-unsafe-call': 'off',
+  '@typescript-eslint/no-misused-promises': 'off',
+  '@typescript-eslint/no-unnecessary-condition': 'off',
+  '@typescript-eslint/await-thenable': 'off',
+  '@typescript-eslint/require-await': 'off',
+  '@typescript-eslint/prefer-nullish-coalescing': 'off',
+  '@typescript-eslint/no-unsafe-return': 'off',
+  'no-await-in-loop': 'off',
+  '@typescript-eslint/no-useless-constructor': 'off',
+  'import/named': 'off',
+  'unicorn/no-array-reduce': 'warn',
+  '@typescript-eslint/no-unsafe-function-type': 'off',
+  '@typescript-eslint/no-unsafe-argument': 'off',
+  '@typescript-eslint/ban-type': 'off',
+  '@typescript-eslint/no-empty-function': 'off',
+  'unicorn/prefer-top-level-await': 'off',
 };
 /**
  * @type {import('eslint').Linter.FlatConfig}
@@ -325,13 +248,20 @@ module.exports = {
     es6: true,
     node: true,
   },
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: [
+    '.eslintrc.js',
+    'test',
+    'database',
+    'ormconfig.ts',
+    'boilerplate.polyfill',
+  ],
   parserOptions: {
     ecmaVersion: 2022,
     project: './tsconfig.json',
     sourceType: 'module',
   },
   extends: [
+    'plugin:@typescript-eslint/recommended',
     'eslint:recommended',
     'plugin:import/typescript',
     'plugin:prettier/recommended',

@@ -48,7 +48,7 @@ export class Product {
       throw new NotFoundException('Product not found!');
     }
 
-    return await this.repositories.productRepository.save(this.product);
+    return this.repositories.productRepository.save(this.product);
   }
 }
 
@@ -66,7 +66,7 @@ export class Clothes extends Product {
       throw new BadRequestException('Category not created!');
     }
 
-    return await super.createProduct();
+    return super.createProduct();
   }
 
   async updateProduct(): Promise<ProductEntity> {
@@ -91,7 +91,7 @@ export class Clothes extends Product {
       this.product.productAttributes,
     );
 
-    return await super.updateProduct();
+    return super.updateProduct();
   }
 }
 
@@ -109,7 +109,7 @@ export class Electronic extends Product {
       throw new BadRequestException('Category not created!');
     }
 
-    return await super.createProduct();
+    return super.createProduct();
   }
 
   async updateProduct(): Promise<ProductEntity> {
@@ -134,6 +134,6 @@ export class Electronic extends Product {
       this.product.productAttributes,
     );
 
-    return await super.updateProduct();
+    return super.updateProduct();
   }
 }

@@ -34,7 +34,7 @@ export class ProductService {
       },
     };
 
-    return await this.commandBus.execute<CreateProductCommand>(
+    return this.commandBus.execute<CreateProductCommand>(
       new CreateProductCommand(data),
     );
   }
@@ -50,7 +50,7 @@ export class ProductService {
       },
     };
 
-    return await this.commandBus.execute<UpdateProductCommand>(
+    return this.commandBus.execute<UpdateProductCommand>(
       new UpdateProductCommand(data),
     );
   }
@@ -63,7 +63,7 @@ export class ProductService {
 
     const getProductQuery = new GetProductQuery(pageOptionsDto, clientId);
 
-    return await this.queryBus.execute(getProductQuery);
+    return this.queryBus.execute(getProductQuery);
   }
 
   findOne(id: number) {
