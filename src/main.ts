@@ -1,3 +1,4 @@
+import { AppModule } from './app.module';
 import {
   ClassSerializerInterceptor,
   HttpStatus,
@@ -6,23 +7,22 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { Transport } from '@nestjs/microservices';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import compression from 'compression';
 import helmet from 'helmet';
+import { ExcludeNullInterceptor } from 'interceptors/exclude-null.interceptor';
+import { LoggingInterceptor } from 'interceptors/logging.interceptor';
 import morgan from 'morgan';
 import { initializeTransactionalContext } from 'typeorm-transactional';
+import { CustomValidationPipe } from 'decorators';
 
-import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
 import { QueryFailedFilter } from './filters/query-failed.filter';
 import { setupSwagger } from './setup-swagger';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
-import { LoggingInterceptor } from 'interceptors/logging.interceptor';
-import { CustomValidationPipe } from 'decorators';
-import { ExcludeNullInterceptor } from 'interceptors/exclude-null.interceptor';
 
 export async function bootstrap(): Promise<NestExpressApplication> {
   initializeTransactionalContext();
@@ -94,8 +94,6 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
   const port = configService.appConfig.port;
   await app.listen(port);
-
-  //   console.info(`server running on ${await app.getUrl()}`);
 
   return app;
 }

@@ -1,27 +1,28 @@
 import './boilerplate.polyfill';
 
+import { CacheModule } from '@nestjs/cache-manager';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CustomThrottlerGuard } from 'guards/customThrottler.guard';
+import { VersionMiddleware } from 'middlewares/version.middleware';
+import { AuthModule } from 'modules/auth/auth.module';
+import { CartModule } from 'modules/cart/cart.module';
+import { ShopModule } from 'modules/shop/shop.module';
 import { ClsModule } from 'nestjs-cls';
-import { CacheModule } from '@nestjs/cache-manager';
+import { DataSource } from 'typeorm';
+import { addTransactionalDataSource } from 'typeorm-transactional';
 
+import { DiscountModule } from './modules/discount/discount.module';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
+import { OrderModule } from './modules/order/order.module';
+import { ProductModule } from './modules/product/product.module';
 import { UserModule } from './modules/user/user.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
-import { VersionMiddleware } from 'middlewares/version.middleware';
-import { APP_GUARD } from '@nestjs/core';
-import { CustomThrottlerGuard } from 'guards/customThrottler.guard';
-import { AuthModule } from 'modules/auth/auth.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { addTransactionalDataSource } from 'typeorm-transactional';
-import { DataSource } from 'typeorm';
-import { ShopModule } from 'modules/shop/shop.module';
-import { ProductModule } from './modules/product/product.module';
-import { DiscountModule } from './modules/discount/discount.module';
-import { CartModule } from 'modules/cart/cart.module';
-import { OrderModule } from './modules/order/order.module';
 
 @Module({
   imports: [
@@ -55,7 +56,7 @@ import { OrderModule } from './modules/order/order.module';
       inject: [ApiConfigService],
       useFactory: (configService: ApiConfigService) =>
         configService.postgresConfig,
-      dataSourceFactory: (options) => {
+      dataSourceFactory: (options: any) => {
         if (!options) {
           throw new Error('Invalid options passed');
         }
@@ -71,6 +72,14 @@ import { OrderModule } from './modules/order/order.module';
       useFactory: async (configService: ApiConfigService) =>
         configService.redisConfig,
     }),
+    ClientsModule.registerAsync([
+      {
+        name: 'rabbitMQ',
+        useFactory: (configService: ApiConfigService) =>
+          configService.rabbitConfig,
+        inject: [ApiConfigService],
+      },
+    ]),
   ],
 
   providers: [

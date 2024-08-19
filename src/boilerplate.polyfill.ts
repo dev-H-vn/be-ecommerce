@@ -1,6 +1,7 @@
 import 'source-map-support/register';
 
 import { compact, map } from 'lodash';
+import type { KeyEntity } from 'modules/auth/key.entity';
 import type { ObjectLiteral } from 'typeorm';
 import { Brackets, SelectQueryBuilder } from 'typeorm';
 
@@ -12,11 +13,10 @@ import { PageMetaDto } from './common/dto/page-meta.dto';
 import type { PageOptionsDto } from './common/dto/page-options.dto';
 import type { LanguageCode } from './constant/language-code';
 import type { KeyOfType } from './types';
-import { KeyEntity } from 'modules/auth/key.entity';
 
 declare global {
   export type Uuid = string & { _uuidBrand: undefined };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-redundant-type-constituents
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export type Todo = any & { _todoBrand: undefined };
 
   export type RequestType = Request & {
@@ -24,8 +24,6 @@ declare global {
     keyStore: Uuid;
     clientId: Uuid;
   };
-
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   interface Array<T> {
     toDtos<Dto extends AbstractDto>(this: T[], options?: unknown): Dto[];
 
@@ -44,7 +42,6 @@ declare global {
 }
 
 declare module 'typeorm' {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   interface SelectQueryBuilder<Entity> {
     searchByString(
       q: string,
@@ -116,7 +113,6 @@ Array.prototype.toDtos = function <
 };
 
 Array.prototype.getByLanguage = function (languageCode: LanguageCode): string {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return this.find((translation) => languageCode === translation.languageCode)!
     .text;
 };

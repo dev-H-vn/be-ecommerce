@@ -9,6 +9,7 @@ import { default as parse } from 'parse-duration';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
 import { CacheModuleOptions, CacheStoreFactory } from '@nestjs/cache-manager';
 import redisStore from 'cache-manager-redis-store';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Injectable()
 export class ApiConfigService {
@@ -36,7 +37,7 @@ export class ApiConfigService {
     }
   }
 
-  private getDuration(key: string, format?: Units): number {
+  public getDuration(key: string, format?: Units): number {
     const value = this.getString(key);
     const duration = parse(value, format);
 
@@ -47,7 +48,7 @@ export class ApiConfigService {
     return duration;
   }
 
-  private getBoolean(key: string): boolean {
+  public getBoolean(key: string): boolean {
     const value = this.get(key);
 
     try {
@@ -57,7 +58,7 @@ export class ApiConfigService {
     }
   }
 
-  private getString(key: string): string {
+  public getString(key: string): string {
     const value = this.get(key);
 
     return value.replaceAll('\\n', '\n');
@@ -97,6 +98,16 @@ export class ApiConfigService {
       synchronize: this.getString('DB_SYNCHRONIZE') === 'true',
       logging: this.getBoolean('ENABLE_ORM_LOGS'),
       namingStrategy: new SnakeNamingStrategy(),
+    };
+  }
+
+  get rabbitConfig(): ClientsModule {
+    return {
+      transport: Transport.RMQ,
+      options: {
+        urls: [this.getString('RABBIT_MQ_URI')],
+        queue: this.getString(`RABBIT_MQ_NAME_QUEUE`),
+      },
     };
   }
 
