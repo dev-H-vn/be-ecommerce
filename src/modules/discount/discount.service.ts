@@ -1,14 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PageDto } from 'common/dto/page.dto';
+import { DiscountsEntity } from 'modules/discount/entities/discount.entity';
+import { DiscountPageOptionsDto } from 'modules/user/dtos/users-page-options.dto';
+import { Repository } from 'typeorm';
+
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DiscountsEntity } from 'modules/discount/entities/discount.entity';
-import { Repository } from 'typeorm';
-import {
-  DiscountPageOptionsDto,
-  ProductPageOptionsDto,
-} from 'modules/user/dtos/users-page-options.dto';
-import { PageDto } from 'common/dto/page.dto';
 
 @Injectable()
 export class DiscountService {
@@ -29,12 +27,15 @@ export class DiscountService {
     if (
       now >= new Date(discountEndDate) ||
       new Date(now.setHours(now.getHours() - 1)) > new Date(discountStartDate)
-    )
+    ) {
       throw new BadRequestException(
         'Start date and end date must be in the future!',
       );
-    if (new Date(discountStartDate) >= new Date(discountEndDate))
+    }
+
+    if (new Date(discountStartDate) >= new Date(discountEndDate)) {
       throw new BadRequestException('Start date muse be before end date!');
+    }
 
     const foundDiscount = await this.discountsRepository
       .createQueryBuilder('discounts')
@@ -50,10 +51,12 @@ export class DiscountService {
       '🐉 ~ DiscountService ~ create ~ foundDiscount ~ 🚀\n',
       foundDiscount,
     );
-    if (foundDiscount) throw new BadRequestException('Discount exist!');
 
-    const newDiscord = await this.discountsRepository.save(createDiscount);
-    return newDiscord;
+    if (foundDiscount) {
+      throw new BadRequestException('Discount exist!');
+    }
+
+    return await this.discountsRepository.save(createDiscount);
   }
 
   async findAllDiscountForProduct(
@@ -70,6 +73,7 @@ export class DiscountService {
       .skip(skip) // Skip the number of records for pagination
       .take(take) // Limit the number of records for pagination
       .getManyAndCount();
+
     return { data: foundDiscounts, count };
   }
 
@@ -87,6 +91,7 @@ export class DiscountService {
       .skip(skip) // Skip the number of records for pagination
       .take(take) // Limit the number of records for pagination
       .getManyAndCount();
+
     return { data: foundDiscounts, count };
   }
 

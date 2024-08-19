@@ -1,11 +1,10 @@
+import { CartsEntity } from 'modules/cart/entities/cart.entity';
 import { Column, Entity, OneToOne, VirtualColumn } from 'typeorm';
 
 import { AbstractEntity } from '../../common/abstract.entity';
 import { RoleType } from '../../constant';
-import { UseDto } from '../../decorators';
 import type { UserDtoOptions } from './dtos/user.dto';
 import { UserDto } from './dtos/user.dto';
-import { CartsEntity } from 'modules/cart/entities/cart.entity';
 
 @Entity({ name: 'users' })
 // @UseDto(UserDto)

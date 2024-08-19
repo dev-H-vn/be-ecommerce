@@ -1,17 +1,13 @@
 import { BadRequestException, Inject } from '@nestjs/common';
 import type { ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { CommandHandler } from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ProductEntity } from 'modules/product/entities/product.entity';
-import { ClothesEntity } from 'modules/product/entities/clothing.entity';
-import { ElectronicEntity } from 'modules/product/entities/electronic.entity';
+import { Category } from 'constant';
 import {
   Clothes,
   Electronic,
   IProduct,
 } from 'modules/product/commands/product.class';
-import { Category } from 'constant';
+import { ProductEntity } from 'modules/product/entities/product.entity';
 import { ProductRepositories } from 'modules/product/repositories/product.repositories';
 
 export class CreateProductCommand implements ICommand {
@@ -32,12 +28,17 @@ export class CreateProductHandler
     const { productType } = product;
 
     switch (productType) {
-      case Category.Electronic:
+      case Category.Electronic: {
         return new Electronic(product, this.repositories).createProduct();
-      case Category.Clothes:
+      }
+
+      case Category.Clothes: {
         return new Clothes(product, this.repositories).createProduct();
-      default:
+      }
+
+      default: {
         throw new BadRequestException(`Invalid product ${productType}`);
+      }
     }
   }
 }

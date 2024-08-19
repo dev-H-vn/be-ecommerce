@@ -1,26 +1,27 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
-  UseGuards,
-  Req,
+  Param,
+  Patch,
+  Post,
   Query,
+  Req,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ProductService } from './product.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { PageDto } from 'common/dto/page.dto';
+import { AuthGuard } from 'guards/auth.guard';
+import { ProductEntity } from 'modules/product/entities/product.entity';
+import { ProductPageOptionsDto } from 'modules/user/dtos/users-page-options.dto';
+
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'guards/auth.guard';
-import { ProductPageOptionsDto } from 'modules/user/dtos/users-page-options.dto';
-import { PageDto } from 'common/dto/page.dto';
-import { ProductEntity } from 'modules/product/entities/product.entity';
+import { ProductService } from './product.service';
 
 @Controller('product')
 @ApiBearerAuth()
@@ -83,6 +84,6 @@ export class ProductController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
+    return this.productService.remove(Number(id));
   }
 }

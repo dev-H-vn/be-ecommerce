@@ -1,10 +1,11 @@
 import { Validate, ValidationArguments } from 'class-validator';
+import { RoleType } from 'constant';
+
 import {
   EnumField,
   StringField,
   StringFieldOptional,
 } from '../../../decorators';
-import { RoleType } from 'constant';
 
 export class UserLoginDto {
   @StringField({ required: true })
@@ -18,11 +19,13 @@ class RequireAtLeastOneField {
   validate(value: any, args: ValidationArguments) {
     const [relatedPropertyName] = args.constraints;
     const relatedValue = (args.object as any)[relatedPropertyName];
+
     return value !== undefined || relatedValue !== undefined;
   }
 
   defaultMessage(args: ValidationArguments) {
     const [relatedPropertyName] = args.constraints;
+
     return `Either ${args.property} or ${relatedPropertyName} must be provided.`;
   }
 }

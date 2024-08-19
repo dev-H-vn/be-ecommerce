@@ -1,12 +1,11 @@
-import { BadRequestException, Inject, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject } from '@nestjs/common';
 import type { ICommand, IQueryHandler } from '@nestjs/cqrs';
 import { QueryHandler } from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
 import { PageDto } from 'common/dto/page.dto';
 import { ProductEntity } from 'modules/product/entities/product.entity';
 import { ProductRepositories } from 'modules/product/repositories/product.repositories';
 import { ProductPageOptionsDto } from 'modules/user/dtos/users-page-options.dto';
-import { ILike, Like, Repository } from 'typeorm';
+import { ILike } from 'typeorm';
 
 export class GetProductQuery implements ICommand {
   constructor(
@@ -44,13 +43,14 @@ export class GetProductHandler implements IQueryHandler<GetProductQuery> {
         order: {
           createdAt: order,
         },
-        skip: skip,
+        skip,
         take,
       });
     console.log(
       '🐉 ~ GetProductHandler ~ execute ~ data-length ~ 🚀\n',
       data.length,
     );
-    return { data: data, count: count };
+
+    return { data, count };
   }
 }

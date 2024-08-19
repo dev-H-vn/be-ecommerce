@@ -1,19 +1,8 @@
 import { IsNumber, Max, Min } from 'class-validator';
 import { AbstractEntity } from 'common/abstract.entity';
-import { CartsEntity } from 'modules/cart/entities/cart.entity';
-import { ClothesEntity } from 'modules/product/entities/clothing.entity';
-import { ElectronicEntity } from 'modules/product/entities/electronic.entity';
 import { InventoriesEntity } from 'modules/product/entities/inventories.entity';
 import slugify from 'slugify';
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-} from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne } from 'typeorm';
 
 @Entity({ name: 'products' })
 export class ProductEntity extends AbstractEntity {
@@ -33,8 +22,10 @@ export class ProductEntity extends AbstractEntity {
   @BeforeUpdate()
   validateData() {
     console.log('validateData called========='); // Debugging statement
-    if (this.productName)
+
+    if (this.productName) {
       this.productSlug = slugify(this.productName, { lower: true });
+    }
   }
 
   @Column({ type: 'numeric', default: 1 })
@@ -47,10 +38,10 @@ export class ProductEntity extends AbstractEntity {
   productVariations!: any[];
 
   @Column('boolean', { default: true })
-  isDraft!: Boolean;
+  isDraft!: boolean;
 
   @Column('boolean', { default: false })
-  isPublish!: Boolean;
+  isPublish!: boolean;
 
   @Column({ type: 'varchar' })
   productDescription!: string;

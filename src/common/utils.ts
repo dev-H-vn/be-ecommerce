@@ -1,6 +1,7 @@
+import crypto from 'node:crypto';
+
 import bcrypt from 'bcrypt';
 import { pick } from 'lodash';
-import crypto from 'crypto';
 
 export function generateHash(password: string): string {
   return bcrypt.hashSync(password, 10);
@@ -18,6 +19,7 @@ export function generateKeyPair() {
       format: 'pem',
     },
   });
+
   return { privateKey, publicKey };
 }
 

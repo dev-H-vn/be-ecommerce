@@ -1,6 +1,6 @@
 import { RoleType } from 'constant';
+
 import {
-  EmailField,
   EmailFieldOptional,
   EnumField,
   PasswordField,

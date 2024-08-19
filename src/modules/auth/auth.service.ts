@@ -4,18 +4,17 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
-
 import { InjectRepository } from '@nestjs/typeorm';
 import { KeyEntity } from 'modules/auth/key.entity';
+import { CheckKeyUsedQuery } from 'modules/auth/queries/check-token-used';
 import { Repository } from 'typeorm';
+
 import type { RoleType } from '../../constant';
 import { TokenType } from '../../constant';
 import { ApiConfigService } from '../../shared/services/api-config.service';
-import { UserService } from '../user/user.service';
 import { RefreshTokenDTO, TokenPayloadDto } from './dto/token-payload.dto';
-import { QueryBus } from '@nestjs/cqrs';
-import { CheckKeyUsedQuery } from 'modules/auth/queries/check-token-used';
 
 @Injectable()
 export class AuthService {
@@ -46,6 +45,7 @@ export class AuthService {
     const existingKey = await this.keyRepository.findOne({
       where: { ownerId: userId },
     });
+
     if (existingKey) {
       await this.keyRepository.delete(existingKey.id);
     }
@@ -54,10 +54,11 @@ export class AuthService {
       ownerId: userId,
       privateKey,
       publicKey,
-      role: role,
+      role,
       refreshToken,
       refreshTokenUsed: [],
     });
+
     return token ? token.publicKey : null;
   }
 
@@ -106,6 +107,7 @@ export class AuthService {
     refetchToken: RefreshTokenDTO,
   ): Promise<TokenPayloadDto | undefined> {
     const { refetchToken: inputRefetchToken } = refetchToken;
+
     try {
       //   check if token used
       const { keyRecord } = req;
@@ -114,22 +116,30 @@ export class AuthService {
         keyRecord,
       );
       const isTokenFound = await this.queryBus.execute(checkTokenUsed);
+
       if (isTokenFound) {
-        await this.keyRepository.delete({ id: keyRecord.id as Uuid });
+        await this.keyRepository.delete({ id: keyRecord.id });
+
         throw new ForbiddenException(
           'Something wrong happen!! please re-login => xoa key',
         );
       }
+
       const holderToken = await this.keyRepository.findOneBy({
         refreshToken: inputRefetchToken,
       });
-      if (!holderToken)
+
+      if (!holderToken) {
         throw new NotFoundException('Something wrong happen!! please re-login');
+      }
 
       const { userId } = await this.jwtService.verifyAsync(inputRefetchToken, {
         publicKey: holderToken.publicKey,
       });
-      if (!userId) throw new NotFoundException('token refresh invalid!!');
+
+      if (!userId) {
+        throw new NotFoundException('token refresh invalid!!');
+      }
 
       const newToken = await this.createTokenPair({
         privateKey: holderToken.privateKey,
@@ -148,6 +158,7 @@ export class AuthService {
           ],
         },
       );
+
       if (updatedToken.affected && updatedToken.affected > 0) {
         return newToken;
       }
@@ -158,10 +169,13 @@ export class AuthService {
 
   async logout(req: RequestType) {
     const { keyStore } = req;
+
     if (!keyStore) {
       throw new NotFoundException('Not found keyStore');
     }
-    await this.keyRepository.delete({ id: keyStore as Uuid });
+
+    await this.keyRepository.delete({ id: keyStore });
+
     return 'logged out';
   }
 
@@ -175,13 +189,16 @@ export class AuthService {
     const foundKey = await this.keyRepository.findOne({
       where: { ownerId: clientId },
     });
+
     if (!foundKey) {
       throw new NotFoundException('Something wrong happen!! please re-login');
     }
+
     const { publicKey } = foundKey;
     const keyVerified = await this.jwtService.verifyAsync(token, {
-      publicKey: publicKey,
+      publicKey,
     });
+
     return { keyVerified, foundKey };
   }
 }

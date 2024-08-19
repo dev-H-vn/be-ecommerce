@@ -14,6 +14,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AdminGuard, AuthGuard } from 'guards/auth.guard';
+import { ExcludeNullInterceptor } from 'interceptors/exclude-null.interceptor';
+import { TimeOutInterceptor } from 'interceptors/timeout.interceptor';
 
 import { PageDto } from '../../common/dto/page.dto';
 import { RoleType } from '../../constant';
@@ -30,9 +33,6 @@ import { UserDto } from './dtos/user.dto';
 import { UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
-import { AdminGuard, AuthGuard } from 'guards/auth.guard';
-import { TimeOutInterceptor } from 'interceptors/timeout.interceptor';
-import { ExcludeNullInterceptor } from 'interceptors/exclude-null.interceptor';
 
 @Controller('users')
 @ApiTags('users')
@@ -41,6 +41,7 @@ import { ExcludeNullInterceptor } from 'interceptors/exclude-null.interceptor';
 @UseInterceptors(TimeOutInterceptor)
 export class UserController {
   private logger: Logger;
+
   constructor(private userService: UserService) {
     this.logger = new Logger(UserController.name);
   }
@@ -54,6 +55,7 @@ export class UserController {
     @AuthUser() user: UserEntity,
   ) {
     this.logger.log(`Method name: ${this.admin.name}`);
+
     return 'hello';
   }
 

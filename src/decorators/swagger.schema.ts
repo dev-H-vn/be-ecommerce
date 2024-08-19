@@ -22,7 +22,7 @@ import _ from 'lodash';
 
 import type { IApiFile } from '../interfaces';
 
-function explore(instance: Object, propertyKey: string | symbol) {
+function explore(instance: object, propertyKey: string | symbol) {
   const types: Array<Type<unknown>> = Reflect.getMetadata(
     PARAMTYPES_METADATA,
     instance,

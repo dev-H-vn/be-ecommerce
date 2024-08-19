@@ -1,14 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
-import { ShopService } from './shop.service';
+import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+
+import { ShopService } from './shop.service';
 
 @ApiTags('shop')
 @Controller('shop')
@@ -22,11 +15,11 @@ export class ShopController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.shopService.findOne(+id);
+    return this.shopService.findOne(Number(id));
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.shopService.remove(+id);
+    return this.shopService.remove(Number(id));
   }
 }

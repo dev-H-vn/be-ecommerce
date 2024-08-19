@@ -17,8 +17,9 @@ export class CheckTokenHandler implements IQueryHandler<CheckKeyUsedQuery> {
   async execute(refreshTokenQuery: CheckKeyUsedQuery) {
     const { refreshToken, keyRecord } = refreshTokenQuery;
 
-    if (!keyRecord)
+    if (!keyRecord) {
       throw new NotFoundException('Something wrong happen!! please re-login');
+    }
 
     return keyRecord.refreshTokenUsed.includes(refreshToken) || false;
   }

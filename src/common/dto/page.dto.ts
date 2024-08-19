@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { ClassField, NumberField } from '../../decorators';
-import { PageMetaDto } from './page-meta.dto';
+import { NumberField } from '../../decorators';
 
 export class PageDto<T> {
   @ApiProperty({ isArray: true })

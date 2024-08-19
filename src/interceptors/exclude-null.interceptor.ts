@@ -1,9 +1,9 @@
 import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
   CallHandler,
+  ExecutionContext,
+  Injectable,
   Logger,
+  NestInterceptor,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -14,15 +14,18 @@ export class ExcludeNullInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     this.logger.warn('===TRIGGER ROUTE INTERCEPTOR (PRE)===');
+
     return next.handle().pipe(
       map((value) => {
-        let str = JSON.stringify(value, (k, v) => (v === null ? '' : v));
-        let result = JSON.parse(str);
-        return result;
+        const str = JSON.stringify(value, (k, v) => (v === null ? '' : v));
+
+        return JSON.parse(str);
       }),
       tap(() =>
         // NOTICE: ROUTE INTERCEPTOR
-        this.logger.warn('===TRIGGER ROUTE INTERCEPTOR (POST)==='),
+        {
+          this.logger.warn('===TRIGGER ROUTE INTERCEPTOR (POST)===');
+        },
       ),
     );
   }

@@ -1,7 +1,6 @@
 import { AbstractEntity } from 'common/abstract.entity';
 import { DiscountAppliesTo, DiscountType } from 'constant';
-import { ShopEntity } from 'modules/shop/shop.entity';
-import { Column, Entity, OneToOne, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'discounts' })
 export class DiscountsEntity extends AbstractEntity {
@@ -41,7 +40,7 @@ export class DiscountsEntity extends AbstractEntity {
   discountUsedCount!: number;
 
   @Column('json', { default: [] })
-  discountUsersUsed!: Record<string, any>[];
+  discountUsersUsed!: Array<Record<string, any>>;
 
   @Column({ type: 'numeric', default: 0 })
   discountMinOder!: number;

@@ -1,17 +1,15 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { CreateProductDto } from 'modules/product/dto/create-product.dto';
-import { UpdateProductDto } from 'modules/product/dto/update-product.dto';
-import { ClothesEntity } from 'modules/product/entities/clothing.entity';
-import { ElectronicEntity } from 'modules/product/entities/electronic.entity';
-import { ProductEntity } from 'modules/product/entities/product.entity';
-import { ProductRepositories } from 'modules/product/repositories/product.repositories';
-import { Repository } from 'typeorm';
+import type { CreateProductDto } from 'modules/product/dto/create-product.dto';
+import type { UpdateProductDto } from 'modules/product/dto/update-product.dto';
+import type { ProductEntity } from 'modules/product/entities/product.entity';
+import type { ProductRepositories } from 'modules/product/repositories/product.repositories';
 
 export type IProduct = CreateProductDto &
   UpdateProductDto & { productOwner: Uuid; productAttributes: { id: Uuid } };
 
 export class Product {
   protected product: IProduct;
+
   protected repositories: ProductRepositories;
 
   constructor(product: IProduct, repositories: ProductRepositories) {
@@ -32,6 +30,7 @@ export class Product {
         inventoryStock: product.productQuantity,
       });
     }
+
     return product;
   }
 
@@ -39,11 +38,16 @@ export class Product {
     if (!this.product.id) {
       throw new BadRequestException('ProductId not found!');
     }
+
     const foundProduct = await this.repositories.productRepository.findOneBy({
       id: this.product.id,
       productOwner: this.product.productOwner,
     });
-    if (!foundProduct) throw new NotFoundException('Product not found!');
+
+    if (!foundProduct) {
+      throw new NotFoundException('Product not found!');
+    }
+
     return await this.repositories.productRepository.save(this.product);
   }
 }
@@ -57,28 +61,37 @@ export class Clothes extends Product {
     const category = await this.repositories.clothesRepository.save(
       this.product.productAttributes,
     );
-    if (!category) throw new BadRequestException('Category not created!');
-    const newProduct = await super.createProduct();
-    return newProduct;
+
+    if (!category) {
+      throw new BadRequestException('Category not created!');
+    }
+
+    return await super.createProduct();
   }
 
   async updateProduct(): Promise<ProductEntity> {
     if (!this.product.id) {
       throw new BadRequestException('ProductId not found!');
     }
+
     if (this.product.id !== this.product.productAttributes.id) {
       throw new BadRequestException('ProductType incorrect!');
     }
+
     const foundCategory = await this.repositories.clothesRepository.findOneBy({
       id: this.product.productAttributes.id,
       productOwner: this.product.productOwner,
     });
-    if (!foundCategory) throw new NotFoundException('Category not found!');
+
+    if (!foundCategory) {
+      throw new NotFoundException('Category not found!');
+    }
+
     await this.repositories.clothesRepository.save(
       this.product.productAttributes,
     );
-    const newProduct = await super.updateProduct();
-    return newProduct;
+
+    return await super.updateProduct();
   }
 }
 
@@ -91,27 +104,36 @@ export class Electronic extends Product {
     const category = await this.repositories.electroRepository.save(
       this.product.productAttributes,
     );
-    if (!category) throw new BadRequestException('Category not created!');
-    const newProduct = await super.createProduct();
-    return newProduct;
+
+    if (!category) {
+      throw new BadRequestException('Category not created!');
+    }
+
+    return await super.createProduct();
   }
 
   async updateProduct(): Promise<ProductEntity> {
     if (!this.product.id) {
       throw new BadRequestException('ProductId not found!');
     }
+
     if (this.product.id !== this.product.productAttributes.id) {
       throw new BadRequestException('ProductType incorrect!');
     }
+
     const foundCategory = await this.repositories.electroRepository.findOneBy({
       id: this.product.productAttributes.id,
       productOwner: this.product.productOwner,
     });
-    if (!foundCategory) throw new NotFoundException('Category not found!');
+
+    if (!foundCategory) {
+      throw new NotFoundException('Category not found!');
+    }
+
     await this.repositories.electroRepository.save(
       this.product.productAttributes,
     );
-    const newProduct = await super.updateProduct();
-    return newProduct;
+
+    return await super.updateProduct();
   }
 }

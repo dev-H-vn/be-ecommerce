@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { OrdersRepositories } from 'modules/order/repositories/order.repositories';
-import { CheckoutDto, CreateOrderDto } from './dto/create-order.dto';
+
+import { CheckoutDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Injectable()
@@ -15,6 +16,7 @@ export class OrderService {
       request,
       checkoutDto,
     );
+
     return 'This action adds a new order';
   }
 
@@ -86,6 +88,7 @@ export class OrderService {
             const productInput = itemsProduct.find(
               (item) => item.productId === product.id,
             );
+
             return (
               accumulator + product.productPrice * (productInput?.quantity || 1)
             );
@@ -125,7 +128,7 @@ export class OrderService {
       checkout_order: {
         ...checkout_order,
         totalCheckOut: totalCheckOut <= 0 ? 0 : totalCheckOut,
-        totalDiscount: totalDiscount,
+        totalDiscount,
       } as typeof checkout_order,
     };
   }

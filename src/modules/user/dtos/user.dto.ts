@@ -7,7 +7,6 @@ import {
   PhoneFieldOptional,
   StringFieldOptional,
 } from '../../../decorators';
-import type { UserEntity } from '../user.entity';
 
 // TODO, remove this class and use constructor's second argument's type
 export type UserDtoOptions = Partial<{ isActive: boolean }>;

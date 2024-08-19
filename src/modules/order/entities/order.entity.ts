@@ -1,9 +1,8 @@
-import { IsDefined, ValidateIf, IsArray } from 'class-validator';
 import { AbstractEntity } from 'common/abstract.entity';
-import { CartStatus, RoleType } from 'constant';
+import { CartStatus } from 'constant';
 import { ProductEntity } from 'modules/product/entities/product.entity';
 import { UserEntity } from 'modules/user/user.entity';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 @Entity({ name: 'orders' })
 export class OrderEntity extends AbstractEntity {
@@ -15,7 +14,7 @@ export class OrderEntity extends AbstractEntity {
   cardState!: CartStatus;
 
   @Column('json', { default: [] })
-  cardProducts!: Partial<ProductEntity>[];
+  cardProducts!: Array<Partial<ProductEntity>>;
 
   @Column('numeric', { default: 0 })
   cardCountProducts!: number;

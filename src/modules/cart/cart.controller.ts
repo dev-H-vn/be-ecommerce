@@ -1,19 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Delete,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Req } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { RoleType } from 'constant';
+import { Auth } from 'decorators';
+
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart.dto';
-import { UpdateCartDto } from './dto/update-cart.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'guards/auth.guard';
-import { Auth } from 'decorators';
-import { RoleType } from 'constant';
 
 @Controller('cart')
 @ApiBearerAuth()

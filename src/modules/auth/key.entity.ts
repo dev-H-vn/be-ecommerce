@@ -1,9 +1,7 @@
 import { IsDefined, ValidateIf } from 'class-validator';
 import { AbstractEntity } from 'common/abstract.entity';
 import { RoleType } from 'constant';
-import { ShopEntity } from 'modules/shop/shop.entity';
-import { UserEntity } from 'modules/user/user.entity';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 @Entity({ name: 'keys' })
 export class KeyEntity extends AbstractEntity {

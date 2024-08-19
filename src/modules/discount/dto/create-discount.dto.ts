@@ -41,7 +41,7 @@ export class CreateDiscountDto {
   discountUsedCount!: number;
 
   @IsArray()
-  discountUsersUsed!: Record<string, any>[];
+  discountUsersUsed!: Array<Record<string, any>>;
 
   @NumberFieldOptional()
   discountMinOder!: number;

@@ -1,30 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Patch,
+  Post,
   Query,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { PageDto } from 'common/dto/page.dto';
+import { RoleType } from 'constant';
+import { Auth } from 'decorators';
+import { AuthGuard } from 'guards/auth.guard';
+import { DiscountsEntity } from 'modules/discount/entities/discount.entity';
+import { DiscountPageOptionsDto } from 'modules/user/dtos/users-page-options.dto';
+
 import { DiscountService } from './discount.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'guards/auth.guard';
-import {
-  DiscountPageOptionsDto,
-  ProductPageOptionsDto,
-} from 'modules/user/dtos/users-page-options.dto';
-import { DiscountsEntity } from 'modules/discount/entities/discount.entity';
-import { PageDto } from 'common/dto/page.dto';
-import { Auth } from 'decorators';
-import { RoleType } from 'constant';
 
 @Controller('discount')
 @ApiBearerAuth()
@@ -65,11 +63,11 @@ export class DiscountController {
     @Param('id') id: string,
     @Body() updateDiscountDto: UpdateDiscountDto,
   ) {
-    return this.discountService.update(+id, updateDiscountDto);
+    return this.discountService.update(Number(id), updateDiscountDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.discountService.remove(+id);
+    return this.discountService.remove(Number(id));
   }
 }

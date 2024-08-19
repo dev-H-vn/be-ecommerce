@@ -1,18 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Req,
 } from '@nestjs/common';
-import { OrderService } from './order.service';
-import { CheckoutDto, CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'decorators';
+
+import { CheckoutDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrderService } from './order.service';
 
 @ApiBearerAuth()
 @ApiTags('order')
@@ -32,6 +33,7 @@ export class OrderController {
     @Body() checkoutDto: CheckoutDto,
   ) {
     console.log('🐉 ~ OrderController ~ checkoutDto ~  🚀\n', checkoutDto);
+
     return this.orderService.getCheckoutPreview(request, checkoutDto);
   }
 
@@ -39,21 +41,22 @@ export class OrderController {
   @Auth()
   orderProducts(@Req() request: RequestType, @Body() checkoutDto: CheckoutDto) {
     console.log('🐉 ~ OrderController ~ checkoutDto ~  🚀\n', checkoutDto);
+
     return this.orderService.getCheckoutPreview(request, checkoutDto);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
+    return this.orderService.findOne(Number(id));
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
+    return this.orderService.update(Number(id), updateOrderDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
+    return this.orderService.remove(Number(id));
   }
 }

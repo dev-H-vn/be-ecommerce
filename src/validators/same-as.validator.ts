@@ -16,7 +16,7 @@ export function SameAs(
         validate(value, args) {
           const [relatedPropertyName] = args!.constraints as [string];
 
-          return (<any>args!.object)[relatedPropertyName] === value;
+          return (args!.object as any)[relatedPropertyName] === value;
         },
         defaultMessage() {
           return '$property must match $constraint1';

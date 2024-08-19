@@ -1,15 +1,15 @@
+import { CacheModuleOptions, CacheStoreFactory } from '@nestjs/cache-manager';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import type { ThrottlerOptions } from '@nestjs/throttler';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import redisStore from 'cache-manager-redis-store';
 import { isNil } from 'lodash';
 import type { Units } from 'parse-duration';
 import { default as parse } from 'parse-duration';
 
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
-import { CacheModuleOptions, CacheStoreFactory } from '@nestjs/cache-manager';
-import redisStore from 'cache-manager-redis-store';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Injectable()
 export class ApiConfigService {

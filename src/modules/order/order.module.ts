@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { OrderService } from './order.service';
-import { OrderController } from './order.controller';
 import { OrdersRepositoriesModule } from 'modules/order/repositories/order.repositories';
+
+import { OrderController } from './order.controller';
+import { OrderService } from './order.service';
 
 @Module({
   imports: [OrdersRepositoriesModule.forRoot()],

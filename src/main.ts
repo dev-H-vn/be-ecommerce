@@ -1,4 +1,3 @@
-import { AppModule } from './app.module';
 import {
   ClassSerializerInterceptor,
   HttpStatus,
@@ -7,7 +6,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { Transport } from '@nestjs/microservices';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import compression from 'compression';
@@ -16,8 +15,9 @@ import { ExcludeNullInterceptor } from 'interceptors/exclude-null.interceptor';
 import { LoggingInterceptor } from 'interceptors/logging.interceptor';
 import morgan from 'morgan';
 import { initializeTransactionalContext } from 'typeorm-transactional';
-import { CustomValidationPipe } from 'decorators';
 
+import { AppModule } from './app.module';
+import { CustomValidationPipe } from './decorators';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
 import { QueryFailedFilter } from './filters/query-failed.filter';
 import { setupSwagger } from './setup-swagger';

@@ -15,6 +15,7 @@ class Discount {
 class ItemProduct {
   @UUIDField()
   productId!: Uuid;
+
   @NumberField({ default: 1 })
   quantity!: number;
 }

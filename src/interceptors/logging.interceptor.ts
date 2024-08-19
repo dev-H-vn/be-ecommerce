@@ -1,9 +1,9 @@
 import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
   CallHandler,
+  ExecutionContext,
+  Injectable,
   Logger,
+  NestInterceptor,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -16,6 +16,7 @@ export class LoggingInterceptor implements NestInterceptor {
     this.logger.warn('===TRIGGER GLOBAL INTERCEPTOR (PRE)===');
 
     const now = Date.now();
+
     return next.handle().pipe(
       tap(() => {
         this.logger.log(`After... ${Date.now() - now}ms`);

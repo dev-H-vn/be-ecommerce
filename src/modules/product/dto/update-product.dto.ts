@@ -1,17 +1,10 @@
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsIn,
-  IsObject,
-  IsOptional,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsObject, IsOptional, ValidateNested } from 'class-validator';
 import { Category } from 'constant';
 import {
   BooleanFieldOptional,
   EnumFieldOptional,
   NumberFieldOptional,
-  StringField,
   StringFieldOptional,
   UUIDField,
 } from 'decorators';

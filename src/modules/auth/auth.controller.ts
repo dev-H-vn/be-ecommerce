@@ -8,19 +8,19 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-
-import { UserEntity } from '../user/user.entity';
-import { UserService } from '../user/user.service';
-import { AuthService } from './auth.service';
-import { ShopService } from 'modules/shop/shop.service';
+import { AuthGuard } from 'guards/auth.guard';
 import { LoginDto } from 'modules/auth/dto/login.dto';
+import { RegisterDto } from 'modules/auth/dto/register.dto';
 import {
   RefreshTokenDTO,
   TokenPayloadDto,
 } from 'modules/auth/dto/token-payload.dto';
-import { AuthGuard } from 'guards/auth.guard';
-import { RegisterDto } from 'modules/auth/dto/register.dto';
 import { ShopEntity } from 'modules/shop/shop.entity';
+import { ShopService } from 'modules/shop/shop.service';
+
+import { UserEntity } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { AuthService } from './auth.service';
 
 @ApiBearerAuth()
 @Controller('auth')
@@ -42,11 +42,12 @@ export class AuthController {
     @Body() registerDto: RegisterDto,
   ): Promise<ShopEntity | UserEntity> {
     const { role } = registerDto;
+
     if (role === 'SHOP') {
       return await this.shopService.register(registerDto);
-    } else {
-      return await this.userService.register(registerDto);
     }
+
+    return await this.userService.register(registerDto);
   }
 
   @Post('login')
@@ -60,11 +61,12 @@ export class AuthController {
     tokens: TokenPayloadDto;
   }> {
     const { role } = loginDto;
+
     if (role === 'SHOP') {
       return await this.shopService.login(loginDto);
-    } else {
-      return await this.userService.login(loginDto);
     }
+
+    return await this.userService.login(loginDto);
   }
 
   @Post('refresh-token')

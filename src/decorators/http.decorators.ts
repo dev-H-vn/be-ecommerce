@@ -1,25 +1,26 @@
 import type { PipeTransform } from '@nestjs/common';
 import {
   applyDecorators,
+  BadRequestException,
+  Injectable,
+  Logger,
   Param,
   ParseUUIDPipe,
   UseGuards,
   UseInterceptors,
-  Injectable,
-  Logger,
-  BadRequestException,
   ValidationPipe,
 } from '@nestjs/common';
-import { ArgumentMetadata, type Type } from '@nestjs/common/interfaces';
+import type { Type } from '@nestjs/common/interfaces';
+import { ArgumentMetadata } from '@nestjs/common/interfaces';
 import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { isUUID } from 'class-validator';
+import { isObjectIdOrHexString } from 'mongoose';
 
 import { RoleType } from '../constant';
 import { AuthGuard } from '../guards/auth.guard';
 import { AuthUserInterceptor } from '../interceptors/auth-user-interceptor.service';
 import { PublicRoute } from './public-route.decorator';
 import { Roles } from './roles.decorator';
-import { isObjectIdOrHexString } from 'mongoose';
-import { isUUID } from 'class-validator';
 
 export function Auth(
   roles: RoleType[] = [RoleType.USER],
@@ -58,7 +59,9 @@ export function UUIDParam(
 @Injectable()
 export class ParseTypeParamsPipe implements PipeTransform {
   logger = new Logger(ParseTypeParamsPipe.name);
+
   type: string;
+
   constructor(type: string) {
     {
       this.type = type;
@@ -69,28 +72,43 @@ export class ParseTypeParamsPipe implements PipeTransform {
     this.logger.log('===TRIGGER ROUTE PARAMS PIPE===');
 
     switch (this.type) {
-      case 'ObjectId':
+      case 'ObjectId': {
         if (!isObjectIdOrHexString(value)) {
           throw new BadRequestException('Invalid ID.');
         }
+
         break;
-      case 'string':
+      }
+
+      case 'string': {
         if (typeof value !== 'string') {
           throw new BadRequestException('Value must is string.');
         }
+
         break;
-      case 'number':
+      }
+
+      case 'number': {
         if (typeof value !== 'number') {
           throw new BadRequestException('Value must is number.');
         }
+
         break;
-      case 'uuid':
-        if (!isUUID(value))
+      }
+
+      case 'uuid': {
+        if (!isUUID(value)) {
           throw new BadRequestException('Value must is uuid.');
+        }
+
         break;
-      default:
+      }
+
+      default: {
         return value;
+      }
     }
+
     return value;
   }
 }

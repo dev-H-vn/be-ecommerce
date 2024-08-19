@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { RegisterDto } from 'modules/auth/dto/register.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { generateHash, generateKeyPair, validateHash } from 'common/utils';
+import { RoleType } from 'constant';
+import { AuthService } from 'modules/auth/auth.service';
+import { LoginDto } from 'modules/auth/dto/login.dto';
+import { RegisterDto } from 'modules/auth/dto/register.dto';
 import { ShopEntity } from 'modules/shop/shop.entity';
 import { Repository } from 'typeorm';
-import { generateHash, generateKeyPair, validateHash } from 'common/utils';
-import { AuthService } from 'modules/auth/auth.service';
-import { RoleType } from 'constant';
 import { v4 as uuidV4 } from 'uuid';
-import { LoginDto } from 'modules/auth/dto/login.dto';
 
 @Injectable()
 export class ShopService {
@@ -21,8 +21,9 @@ export class ShopService {
     const { email, password, userName } = createShopDto;
 
     const holderShop = await this.shopRepository.findOne({
-      where: { email: email },
+      where: { email },
     });
+
     if (holderShop) {
       throw new BadRequestException('Shop Already registered!');
     }
@@ -34,13 +35,14 @@ export class ShopService {
       shopName: userName,
       password: passWordHash,
     });
+
     if (newShop) {
       const { privateKey, publicKey } = generateKeyPair();
 
       //create token pair
       const tokens = await this.authService.createTokenPair({
-        privateKey: privateKey,
-        publicKey: publicKey,
+        privateKey,
+        publicKey,
         role: RoleType.SHOP,
         userId: newShop.id,
       });
@@ -53,9 +55,11 @@ export class ShopService {
         role: RoleType.SHOP,
         refreshToken: tokens.refetchToken,
       });
+
       if (!publicKeyString) {
         throw new BadRequestException('publicKeyString error');
       }
+
       await this.shopRepository.save(newShop);
     }
 
@@ -66,20 +70,24 @@ export class ShopService {
     const { email, password } = loginShopDto;
 
     const foundShop = await this.shopRepository.findOne({
-      where: { email: email },
+      where: { email },
     });
+
     if (!foundShop) {
       throw new BadRequestException('Shop not registered!');
     }
 
     const passWordHash = validateHash(password, foundShop.password);
-    if (!passWordHash) throw new BadRequestException('Authentication error!');
+
+    if (!passWordHash) {
+      throw new BadRequestException('Authentication error!');
+    }
 
     const { privateKey, publicKey } = generateKeyPair();
     //create token pair
     const tokens = await this.authService.createTokenPair({
       privateKey: privateKey.toString(),
-      publicKey: publicKey,
+      publicKey,
       role: RoleType.SHOP,
       userId: foundShop.id,
     });
@@ -90,6 +98,7 @@ export class ShopService {
       role: RoleType.SHOP,
       refreshToken: tokens.refetchToken,
     });
+
     if (!publicKeyString) {
       throw new BadRequestException('publicKeyString error');
     }

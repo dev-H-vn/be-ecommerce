@@ -1,6 +1,10 @@
 import { forwardRef, Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { KeyEntity } from 'modules/auth/key.entity';
+import { CheckTokenHandler } from 'modules/auth/queries/check-token-used';
+import { ShopModule } from 'modules/shop/shop.module';
 
 import { ApiConfigService } from '../../shared/services/api-config.service';
 import { UserModule } from '../user/user.module';
@@ -8,10 +12,6 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { PublicStrategy } from './public.strategy';
-import { KeyEntity } from 'modules/auth/key.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ShopModule } from 'modules/shop/shop.module';
-import { CheckTokenHandler } from 'modules/auth/queries/check-token-used';
 
 const handlers = [CheckTokenHandler];
 @Global()
