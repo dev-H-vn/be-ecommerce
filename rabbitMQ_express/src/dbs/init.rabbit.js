@@ -3,6 +3,10 @@ const configs = require('../configs');
 
 async function connectRabbitMQ() {
   try {
+    console.log(
+      '🐉 ~ connectRabbitMQ ~ configs.rabbitHost ~ 🚀\n',
+      configs.rabbitHost,
+    );
     const connection = await amqp.connect(configs.rabbitHost);
     console.log('Connected to RabbitMQ');
 
