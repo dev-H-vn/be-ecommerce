@@ -13,4 +13,9 @@ export class RabbitController {
   testRabbit(@Body() createRabbitDto: CreateRabbitDto) {
     return this.rabbitService.testRabbit(createRabbitDto);
   }
+
+  @Post('assertExchange')
+  testAssertExchange(@Body() createRabbitDto: CreateRabbitDto) {
+    return this.rabbitService.assertExchange(createRabbitDto);
+  }
 }

@@ -29,10 +29,44 @@ export class RmqService implements OnModuleInit {
     return lastValueFrom(this.client.send(pattern, data));
   }
 
-  // async assertExchange(pattern: string, data: any) {
-  //   await this.channel.
+  async assertExchange() {
+    const notificationExchange = 'notificationExchange';
+    const notifyQueue = 'notifyQueueProcess';
+    const notificationExDLX = 'notificationExDLX';
+    const notificationExKeyDLX = 'notificationExKeyDLX';
 
-  // }
+    // Create exchange
+    await this.channel.assertExchange(notificationExchange, 'direct', {
+      durable: true,
+    });
+
+    // // Check if the queue exists and delete it if it does
+    // try {
+    //   await this.channel.checkQueue(notifyQueue);
+    //   await this.channel.deleteQueue(notifyQueue);
+    // } catch (error) {
+    //   // Queue does not exist, no need to delete
+    // }
+
+    // Create queue with the desired arguments
+    const queueResult = await this.channel.assertQueue(notifyQueue, {
+      durable: true,
+      deadLetterExchange: notificationExDLX,
+      deadLetterRoutingKey: notificationExKeyDLX,
+    });
+
+    // Bind queue to exchange
+    await this.channel.bindQueue(
+      queueResult.queue,
+      notificationExchange,
+      'pattern',
+    );
+
+    const msg = 'new product';
+    await this.channel.sendToQueue(queueResult.queue, Buffer.from(msg), {
+      expiration: 10000,
+    });
+  }
 
   async emitMessage(pattern: string, data: any) {
     this.client.emit(pattern, data);

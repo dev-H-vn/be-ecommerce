@@ -15,4 +15,13 @@ export class RabbitService {
 
     return 'This action adds a new rabbit';
   }
+
+  async assertExchange(createRabbitDto: CreateRabbitDto) {
+    const log = await this.rmqService.getOptions();
+    const test = await this.rmqService.assertExchange();
+
+    console.log('🐉 ~ RabbitService ~ testRabbit ~ log ~  🚀\n', log, test);
+
+    return 'This action adds a new rabbit';
+  }
 }

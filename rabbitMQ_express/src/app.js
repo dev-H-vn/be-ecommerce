@@ -6,7 +6,7 @@ const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
 const httpStatus = require('http-status');
-const connectRabbitMQ = require('./dbs/init.rabbit');
+const { connectRabbitMQ, consumerToQueueFailed } = require('./dbs/init.rabbit');
 
 const app = express();
 
@@ -32,22 +32,35 @@ app.get('/', (req, res) => {
 });
 
 // Connect to RabbitMQ
-(connectRabbit = function () {
-  connectRabbitMQ()
-    .then((rabbitMQ) => {
-      console.log('connect rabbit successfully');
+// Connect to RabbitMQ
+(async function connectRabbit() {
+  try {
+    const rabbitMQ = await connectRabbitMQ();
+    console.log('Connected to RabbitMQ successfully');
+    const channel = rabbitMQ.channel;
+    const { queue } = (global.channelRabbit = channel);
+    global.queueNameRabbit = queue;
 
-      const { channel, queue } = rabbitMQ;
-      global.channelRabbit = channel;
-      global.queueNameRabbit = queue;
-      channel.consume(queue, (msg) => {
+    const notifyQueue = 'notifyQueueProcess';
+    channel.consume(notifyQueue, (msg) => {
+      try {
         if (msg !== null) {
+          // has error
+          throw new Error('Failed to process message');
+
           console.log(`Received message: ${msg.content.toString()}`);
           channel.ack(msg);
         }
-      });
-    })
-    .catch((err) => console.log(err));
+      } catch (error) {
+        channel.nack(msg, false, false);
+      }
+    });
+
+    // Start consuming failed messages
+    await consumerToQueueFailed();
+  } catch (err) {
+    console.error('Failed to connect to RabbitMQ', err);
+  }
 })();
 
 app.get('/send', (req, res) => {
