@@ -2,14 +2,14 @@ import { CacheModule } from '@nestjs/cache-manager';
 import type { Provider } from '@nestjs/common';
 import { Global, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { ClientsModule } from '@nestjs/microservices';
+import { RmqService } from 'shared/services/rabbitmq.service';
 import { RedisService } from 'shared/services/redis.service';
 
 import { ApiConfigService } from './services/api-config.service';
 import { AwsS3Service } from './services/aws-s3.service';
 import { GeneratorService } from './services/generator.service';
 import { ValidatorService } from './services/validator.service';
-import { RmqService } from 'shared/services/rabbitmq.service';
-import { ClientsModule } from '@nestjs/microservices';
 
 const providers: Provider[] = [
   ApiConfigService,

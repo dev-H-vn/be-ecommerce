@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRabbitDto } from './dto/create-rabbit.dto';
-import { UpdateRabbitDto } from './dto/update-rabbit.dto';
 import { RmqService } from 'shared/services/rabbitmq.service';
+
+import { CreateRabbitDto } from './dto/create-rabbit.dto';
 
 @Injectable()
 export class RabbitService {

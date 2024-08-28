@@ -1,13 +1,8 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import {
-  ClientProxy,
-  RmqContext,
-  RmqOptions,
-  Transport,
-} from '@nestjs/microservices';
+import { ClientProxy, RmqOptions, Transport } from '@nestjs/microservices';
+import { Channel, connect } from 'amqplib';
 import { lastValueFrom } from 'rxjs';
 import { ApiConfigService } from 'shared/services/api-config.service';
-import { Channel, connect } from 'amqplib';
 
 @Injectable()
 export class RmqService implements OnModuleInit {

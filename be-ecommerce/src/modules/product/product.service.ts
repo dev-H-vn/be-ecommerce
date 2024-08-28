@@ -1,6 +1,8 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { PageDto } from 'common/dto/page.dto';
+import { NotificationType } from 'constant';
+import { NotificationService } from 'modules/notification/notification.service';
 import { CreateProductCommand } from 'modules/product/commands/create-product.command';
 import { UpdateProductCommand } from 'modules/product/commands/update-product.command';
 import { ProductEntity } from 'modules/product/entities/product.entity';
@@ -11,8 +13,6 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { NotificationService } from 'modules/notification/notification.service';
-import { NotificationType } from 'constant';
 
 @Injectable()
 export class ProductService {
@@ -41,6 +41,7 @@ export class ProductService {
       CreateProductCommand,
       Promise<ProductEntity>
     >(new CreateProductCommand(data));
+
     if (resp) {
       await this.notificationService.create({
         notifyReceivedId: id,
@@ -48,6 +49,7 @@ export class ProductService {
         notifyType: NotificationType.NEW_PRODUCT,
       });
     }
+
     return resp;
   }
 

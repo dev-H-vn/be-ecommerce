@@ -1,7 +1,8 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { RabbitService } from './rabbit.service';
-import { CreateRabbitDto } from './dto/create-rabbit.dto';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
+import { CreateRabbitDto } from './dto/create-rabbit.dto';
+import { RabbitService } from './rabbit.service';
 
 @Controller('rabbit')
 @ApiBearerAuth()

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { NotificationType } from 'constant';
 import { notificationEntity } from 'modules/notification/entities/notification.entity';
 import { Repository } from 'typeorm';
-import { NotificationType } from 'constant';
+
+import { CreateNotificationDto } from './dto/create-notification.dto';
+import { UpdateNotificationDto } from './dto/update-notification.dto';
 
 @Injectable()
 export class NotificationService {
@@ -17,31 +18,41 @@ export class NotificationService {
     let { notifyContent } = createNotificationDto;
 
     switch (createNotificationDto.notifyType) {
-      case NotificationType.ORDER_FAILED:
+      case NotificationType.ORDER_FAILED: {
         notifyContent =
           'Your order has failed. Please try again or contact support for assistance.';
         break;
-      case NotificationType.ORDER_SUCCESS:
+      }
+
+      case NotificationType.ORDER_SUCCESS: {
         notifyContent =
           'Your order has been successfully placed. Thank you for shopping with us!';
         break;
-      case NotificationType.NEW_PRODUCT:
+      }
+
+      case NotificationType.NEW_PRODUCT: {
         notifyContent =
           'A new product has been added to our store. Check it out now!';
         break;
-      case NotificationType.NEW_DISCOUNT:
+      }
+
+      case NotificationType.NEW_DISCOUNT: {
         notifyContent =
           "A new discount is available. Don't miss out on great savings!";
         break;
-      default:
-        'You have a new notification.';
+      }
+
+      default: {
+        ('You have a new notification.');
         break;
+      }
     }
 
     const notification = this.notificationRepository.create({
       ...createNotificationDto,
-      notifyContent: notifyContent,
+      notifyContent,
     });
+
     // Save the notification to the database
     return await this.notificationRepository.save(notification);
   }

@@ -1,15 +1,16 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
-import { NotificationService } from './notification.service';
+
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
+import { NotificationService } from './notification.service';
 
 @Controller('notification')
 export class NotificationController {
@@ -27,7 +28,7 @@ export class NotificationController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.notificationService.findOne(+id);
+    return this.notificationService.findOne(Number(id));
   }
 
   @Patch(':id')
@@ -35,11 +36,11 @@ export class NotificationController {
     @Param('id') id: string,
     @Body() updateNotificationDto: UpdateNotificationDto,
   ) {
-    return this.notificationService.update(+id, updateNotificationDto);
+    return this.notificationService.update(Number(id), updateNotificationDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.notificationService.remove(+id);
+    return this.notificationService.remove(Number(id));
   }
 }

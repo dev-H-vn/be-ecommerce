@@ -1,7 +1,6 @@
 import { IsObject } from 'class-validator';
 import { AbstractEntity } from 'common/abstract.entity';
-import { CartStatus, NotificationType, RoleType } from 'constant';
-import { UUID } from 'crypto';
+import { NotificationType } from 'constant';
 import { Column, Entity } from 'typeorm';
 
 @Entity({ name: 'notification' })
@@ -23,7 +22,5 @@ export class notificationEntity extends AbstractEntity {
   notifyContent!: string;
 
   @IsObject({ each: true })
-  notifyOptions!: {
-    [key: string]: any;
-  };
+  notifyOptions!: Record<string, any>;
 }

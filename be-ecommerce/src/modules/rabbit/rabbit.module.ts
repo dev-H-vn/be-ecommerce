@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { RabbitService } from './rabbit.service';
+
 import { RabbitController } from './rabbit.controller';
+import { RabbitService } from './rabbit.service';
 
 @Module({
   controllers: [RabbitController],

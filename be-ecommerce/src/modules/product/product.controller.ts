@@ -15,6 +15,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PageDto } from 'common/dto/page.dto';
+import { RoleType } from 'constant';
+import { Auth } from 'decorators';
 import { AuthGuard } from 'guards/auth.guard';
 import { ProductEntity } from 'modules/product/entities/product.entity';
 import { ProductPageOptionsDto } from 'modules/user/dtos/users-page-options.dto';
@@ -22,8 +24,6 @@ import { ProductPageOptionsDto } from 'modules/user/dtos/users-page-options.dto'
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
-import { RoleType } from 'constant';
-import { Auth } from 'decorators';
 
 @Controller('product')
 @ApiBearerAuth()
